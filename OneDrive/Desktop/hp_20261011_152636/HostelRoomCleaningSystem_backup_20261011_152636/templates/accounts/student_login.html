@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+{% load static socialaccount %}
+
+{% block title %}
+Student Login | CleanStay VIT
+{% endblock %}
+
+{% block body_class %}
+student-login-body
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="login-page">
+
+    <!-- Background decoration -->
+    <div class="login-bg-circle circle-one"></div>
+    <div class="login-bg-circle circle-two"></div>
+
+    <!-- ================= HEADER ================= -->
+    <header class="login-header">
+
+        <a href="{% url 'role_selection' %}" class="login-back">
+            <span>←</span>
+            Back to role selection
+        </a>
+
+        <div class="login-brand">
+            <div class="login-brand-icon">⌂</div>
+
+            <div>
+                <strong>CleanStay VIT</strong>
+                <span>Hostel Cleaning Management</span>
+            </div>
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <section class="login-layout">
+
+        <!-- LEFT SIDE -->
+        <section class="login-visual">
+
+            <div class="login-eyebrow">
+                STUDENT PORTAL
+            </div>
+
+            <h1>
+                Your hostel cleaning,
+                <span>handled simply.</span>
+            </h1>
+
+            <p class="login-description">
+                Request room cleaning, choose your preferred schedule
+                and track every cleaning stage from one secure portal.
+            </p>
+
+
+            <!-- STUDENT ILLUSTRATION -->
+            <div class="login-student-area">
+
+                <div class="student-circle"></div>
+
+                <div class="login-student-crop">
+                    <div class="login-student-image"></div>
+                </div>
+
+
+                <!-- Floating Card 1 -->
+                <div class="login-floating-card floating-easy">
+
+                    <div class="floating-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <strong>Easy requests</strong>
+                        <span>Book cleaning quickly</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Floating Card 2 -->
+                <div class="login-floating-card floating-track">
+
+                    <div class="floating-icon">
+                        ◷
+                    </div>
+
+                    <div>
+                        <strong>Live tracking</strong>
+                        <span>Follow every update</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Floating Card 3 -->
+                <div class="login-floating-card floating-book">
+
+                    <div class="floating-icon">
+                        ▦
+                    </div>
+
+                    <div>
+                        <strong>Quick booking</strong>
+                        <span>Choose your schedule</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BENEFITS -->
+
+            <div class="login-benefits">
+
+                <div>
+                    <span>✓</span>
+                    <p>
+                        <strong>Secure access</strong>
+                        <small>Official VIT account</small>
+                    </p>
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    <p>
+                        <strong>Easy booking</strong>
+                        <small>Request in seconds</small>
+                    </p>
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    <p>
+                        <strong>Live status</strong>
+                        <small>Track your cleaning</small>
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= RIGHT LOGIN CARD ================= -->
+
+        <section class="login-panel">
+
+            <div class="login-card">
+
+                <div class="login-role-icon">
+                    ♢
+                </div>
+
+                <div class="login-card-heading">
+
+                    <span>STUDENT ACCESS</span>
+
+                    <h2>Welcome back</h2>
+
+                    <p>
+                        Sign in using your official VIT student
+                        Google account.
+                    </p>
+
+                </div>
+
+
+                <!-- DJANGO MESSAGES -->
+
+                {% if messages %}
+
+                <div class="student-message-list">
+
+                    {% for message in messages %}
+
+                    <div class="student-message
+                        {% if message.tags %}
+                        student-message-{{ message.tags }}
+                        {% endif %}">
+
+                        <span>{{ message }}</span>
+
+                        <button
+                            type="button"
+                            onclick="this.parentElement.remove()"
+                            aria-label="Close message">
+                            ×
+                        </button>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- GOOGLE LOGIN — KEEP BACKEND URL -->
+
+                <a
+                    href="{% url 'student_google_login' %}"
+                    class="google-login-button"
+                    id="studentGoogleButton">
+
+                    <span class="google-logo">
+
+                        <svg viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
+
+                            <path
+                                fill="#4285F4"
+                                d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.91h5.38a4.6 4.6 0 0 1-1.99 3.02v2.51h3.22c1.89-1.74 2.99-4.31 2.99-7.37Z"/>
+
+                            <path
+                                fill="#34A853"
+                                d="M12 22c2.7 0 4.96-.89 6.61-2.4l-3.22-2.51c-.89.6-2.03.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.06v2.59A10 10 0 0 0 12 22Z"/>
+
+                            <path
+                                fill="#FBBC05"
+                                d="M6.39 13.92A6.02 6.02 0 0 1 6.08 12c0-.67.11-1.32.31-1.92V7.49H3.06A10 10 0 0 0 2 12c0 1.61.38 3.13 1.06 4.51l3.33-2.59Z"/>
+
+                            <path
+                                fill="#EA4335"
+                                d="M12 5.95c1.47 0 2.79.51 3.83 1.5l2.87-2.87C16.96 2.96 14.7 2 12 2a10 10 0 0 0-8.94 5.49l3.33 2.59C7.18 7.71 9.39 5.95 12 5.95Z"/>
+
+                        </svg>
+
+                    </span>
+
+                    <span>Continue with Google</span>
+
+                    <strong>→</strong>
+
+                </a>
+
+
+                <!-- DOMAIN INFORMATION -->
+
+                <div class="login-domain-card">
+
+                    <div class="domain-check">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>ACCEPTED ACCOUNT</span>
+
+                        <strong>
+                            name.year@vitstudent.ac.in
+                        </strong>
+
+                        <p>
+                            Personal Gmail accounts cannot access
+                            the student portal.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- HELP -->
+
+                <div class="login-help">
+
+                    <div class="help-icon">
+                        ?
+                    </div>
+
+                    <div>
+
+                        <strong>Having trouble signing in?</strong>
+
+                        <p>
+                            Select your official VIT student account when
+                            Google asks you to choose an account.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div class="login-security">
+
+                    <span>✓ Secure</span>
+
+                    <i></i>
+
+                    <span>Reliable</span>
+
+                    <i></i>
+
+                    <span>VIT Students Only</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/auth.js' %}"></script>
+{% endblock %}

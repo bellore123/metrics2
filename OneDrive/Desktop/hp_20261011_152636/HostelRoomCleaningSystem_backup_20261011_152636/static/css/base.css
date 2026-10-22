@@ -1,0 +1,337 @@
+/* =========================================================
+   GLOBAL RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Inter", sans-serif;
+    color: #10182f;
+    background: #f8f9ff;
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+:root {
+    --primary: #5935e8;
+    --primary-dark: #3f1fc6;
+    --primary-light: #805ef5;
+
+    --student: #6939ee;
+    --warden: #06966b;
+    --cleaner: #ff6b0b;
+    --admin: #2468ea;
+
+    --text-dark: #10182f;
+    --text-muted: #667085;
+
+    --background: #f8f9ff;
+    --surface: #ffffff;
+
+    --border: rgba(214, 218, 232, 0.85);
+
+    --shadow-small:
+        0 10px 30px rgba(32, 37, 75, 0.08);
+
+    --shadow-medium:
+        0 18px 50px rgba(32, 37, 75, 0.12);
+
+    --shadow-large:
+        0 30px 80px rgba(32, 37, 75, 0.16);
+
+    --radius-small: 12px;
+    --radius-medium: 18px;
+    --radius-large: 26px;
+
+    --transition: 0.25s ease;
+}
+
+
+/* =========================================================
+   MESSAGE NOTIFICATIONS
+========================================================= */
+
+.message-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+
+    width: min(390px, calc(100% - 32px));
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.system-message {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 16px 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+
+    color: #172033;
+    background: rgba(255, 255, 255, 0.96);
+
+    box-shadow: var(--shadow-medium);
+
+    animation: messageSlideIn 0.35s ease;
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
+}
+
+.system-message-success {
+    border-left: 5px solid #10a875;
+}
+
+.system-message-error {
+    border-left: 5px solid #e5484d;
+}
+
+.system-message-warning {
+    border-left: 5px solid #f2a900;
+}
+
+.system-message-info {
+    border-left: 5px solid #3478f6;
+}
+
+.message-close {
+    border: none;
+    color: #697386;
+    background: transparent;
+
+    font-size: 22px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition),
+        transform var(--transition);
+}
+
+.message-close:hover {
+    color: #111827;
+    transform: scale(1.1);
+}
+
+.system-message-hide {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+
+/* =========================================================
+   COMMON BUTTONS
+========================================================= */
+
+.primary-button {
+    min-height: 50px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 13px 22px;
+
+    border: none;
+    border-radius: 13px;
+
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-light)
+        );
+
+    font-weight: 700;
+
+    box-shadow:
+        0 14px 30px rgba(89, 53, 232, 0.25);
+
+    cursor: pointer;
+
+    transition:
+        transform var(--transition),
+        box-shadow var(--transition);
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 20px 38px rgba(89, 53, 232, 0.34);
+}
+
+.secondary-button {
+    min-height: 50px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 13px 22px;
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    color: var(--text-dark);
+    background: #ffffff;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+.secondary-button:hover {
+    transform: translateY(-2px);
+    border-color: rgba(89, 53, 232, 0.4);
+    box-shadow: var(--shadow-small);
+}
+
+
+/* =========================================================
+   COMMON FORM STYLES
+========================================================= */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #25304a;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    padding: 14px 15px;
+
+    border: 1px solid #d8dceb;
+    border-radius: 12px;
+
+    color: var(--text-dark);
+    background: rgba(255, 255, 255, 0.92);
+
+    outline: none;
+
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 4px rgba(89, 53, 232, 0.12);
+}
+
+.field-error {
+    color: #d92d20;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+:focus-visible {
+    outline: 3px solid rgba(89, 53, 232, 0.35);
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+    .message-container {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+
+        width: auto;
+    }
+
+    .system-message {
+        padding: 14px 15px;
+    }
+}

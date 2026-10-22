@@ -1,0 +1,1091 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Request #{{ cleaning_request.id }} | CleanStay VIT{% endblock %}
+
+{% block body_class %}student-request-detail-body{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/student_request_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="sr-page">
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="sr-navbar">
+
+        <a href="{% url 'student_home' %}" class="sr-brand">
+            <div class="sr-brand-icon">✓</div>
+
+            <div>
+                <strong>CleanStay VIT</strong>
+                <span>STUDENT PORTAL</span>
+            </div>
+        </a>
+
+        <nav class="sr-nav">
+            <a href="{% url 'student_home' %}">Dashboard</a>
+            <a href="{% url 'student_requests' %}" class="active">
+                My Requests
+            </a>
+            <a href="{% url 'create_cleaning_request' %}">
+                New Request
+            </a>
+            <a href="{% url 'student_hostel_setup' %}">
+                Room
+            </a>
+        </nav>
+
+        <div class="sr-user">
+
+            <div class="sr-avatar">
+                {{ request.user.name|default:request.user.email|first|upper }}
+            </div>
+
+            <div class="sr-user-info">
+                <strong>
+                    {{ request.user.name|default:"Student" }}
+                </strong>
+                <span>
+                    {{ request.user.email }}
+                </span>
+            </div>
+
+            <a href="{% url 'logout' %}" class="sr-logout">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= MESSAGES ================= -->
+
+    {% if messages %}
+
+    <section class="sr-messages">
+
+        {% for message in messages %}
+
+        <div class="sr-message">
+            <span>{{ message }}</span>
+
+            <button
+                type="button"
+                onclick="this.parentElement.remove()"
+            >
+                ×
+            </button>
+        </div>
+
+        {% endfor %}
+
+    </section>
+
+    {% endif %}
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="sr-hero">
+
+        <div class="sr-hero-left">
+
+            <a href="{% url 'student_requests' %}" class="sr-back">
+                ← Back to requests
+            </a>
+
+            <p class="sr-eyebrow">
+                CLEANING REQUEST #{{ cleaning_request.id }}
+            </p>
+
+            <h1>
+                {{ cleaning_request.get_cleaning_type_display }}
+            </h1>
+
+            <p class="sr-location">
+                {{ cleaning_request.hostel_allocation.block }}
+                · Room
+                {{ cleaning_request.hostel_allocation.room_number }}
+            </p>
+
+            <p class="sr-description">
+                Track your room cleaning request and verify the service
+                after the cleaner completes the work.
+            </p>
+
+        </div>
+
+
+        <div class="sr-status-card">
+
+            <span>CURRENT STATUS</span>
+
+            <strong class="sr-status sr-status-{{ cleaning_request.status }}">
+                {{ cleaning_request.get_status_display }}
+            </strong>
+
+            {% if cleaning_request.status == "completed" %}
+                <small>
+                    Cleaner finished the job. Your confirmation is required.
+                </small>
+
+            {% elif cleaning_request.status == "confirmed" %}
+                <small>
+                    You confirmed that your room was cleaned.
+                </small>
+
+            {% elif cleaning_request.status == "not_cleaned" %}
+                <small>
+                    You reported that the room was not cleaned.
+                </small>
+
+            {% elif cleaning_request.status == "in_progress" %}
+                <small>
+                    Your cleaner is currently working on this request.
+                </small>
+
+            {% elif cleaning_request.status == "assigned" %}
+                <small>
+                    A cleaner has been assigned to your request.
+                </small>
+
+            {% else %}
+                <small>
+                    Your request is waiting for processing.
+                </small>
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= QUICK INFORMATION ================= -->
+
+    <section class="sr-info-grid">
+
+        <article class="sr-info-card">
+
+            <div class="sr-info-icon">▣</div>
+
+            <div>
+                <span>DATE</span>
+
+                <strong>
+                    {{ cleaning_request.cleaning_date|date:"d F Y" }}
+                </strong>
+
+                <small>Cleaning schedule</small>
+            </div>
+
+        </article>
+
+
+        <article class="sr-info-card">
+
+            <div class="sr-info-icon">◷</div>
+
+            <div>
+                <span>TIME SLOT</span>
+
+                <strong>
+                    {{ cleaning_request.get_time_slot_display }}
+                </strong>
+
+                <small>Scheduled time</small>
+            </div>
+
+        </article>
+
+
+        <article class="sr-info-card">
+
+            <div class="sr-info-icon">≡</div>
+
+            <div>
+                <span>SERVICE</span>
+
+                <strong>
+                    {{ cleaning_request.get_cleaning_type_display }}
+                </strong>
+
+                <small>Requested cleaning</small>
+            </div>
+
+        </article>
+
+
+        <article class="sr-info-card">
+
+            <div class="sr-info-icon">⌂</div>
+
+            <div>
+                <span>ROOM</span>
+
+                <strong>
+                    {{ cleaning_request.hostel_allocation.block }}
+                    ·
+                    {{ cleaning_request.hostel_allocation.room_number }}
+                </strong>
+
+                <small>Your hostel room</small>
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <section class="sr-layout">
+
+        <main class="sr-main">
+
+
+            <!-- ================= JOB INFORMATION ================= -->
+
+            <article class="sr-panel">
+
+                <header class="sr-panel-header">
+
+                    <div class="sr-panel-icon">▦</div>
+
+                    <div>
+                        <p>JOB DETAILS</p>
+                        <h2>Cleaning information</h2>
+                    </div>
+
+                </header>
+
+
+                <div class="sr-details-grid">
+
+                    <div class="sr-detail-box">
+                        <span>Room</span>
+
+                        <strong>
+                            {{ cleaning_request.hostel_allocation.block }}
+                            - Room
+                            {{ cleaning_request.hostel_allocation.room_number }}
+                        </strong>
+                    </div>
+
+
+                    <div class="sr-detail-box">
+                        <span>Date</span>
+
+                        <strong>
+                            {{ cleaning_request.cleaning_date|date:"d M Y" }}
+                        </strong>
+                    </div>
+
+
+                    <div class="sr-detail-box">
+                        <span>Time</span>
+
+                        <strong>
+                            {{ cleaning_request.get_time_slot_display }}
+                        </strong>
+                    </div>
+
+
+                    <div class="sr-detail-box">
+                        <span>Cleaning service</span>
+
+                        <strong>
+                            Room Cleaning
+                        </strong>
+                    </div>
+
+                    {% if cleaning_request.completion_date %}
+                    <div class="sr-detail-box" style="border-left: 3px solid #10b981;">
+                        <span>Completed on</span>
+
+                        <strong style="color: #059669;">
+                            {{ cleaning_request.completion_date|date:"d M Y" }}
+                        </strong>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+
+            <!-- ================= CLEANER ================= -->
+
+            <article class="sr-panel">
+
+                <header class="sr-panel-header">
+
+                    <div class="sr-panel-icon">♟</div>
+
+                    <div>
+                        <p>CLEANER</p>
+                        <h2>Assigned cleaning staff</h2>
+                    </div>
+
+                </header>
+
+
+                {% if cleaning_request.assigned_cleaner %}
+
+                <div class="sr-cleaner">
+
+                    <div class="sr-cleaner-avatar">
+                        {{ cleaning_request.assigned_cleaner.user.name|default:"C"|first|upper }}
+                    </div>
+
+                    <div class="sr-cleaner-info">
+
+                        <span>CLEANER NAME</span>
+
+                        <strong>
+                            {{ cleaning_request.assigned_cleaner.user.name|default:"Cleaner" }}
+                        </strong>
+
+                        <small>
+                            {{ cleaning_request.assigned_cleaner.user.email }}
+                        </small>
+
+                    </div>
+
+
+                    <div class="sr-cleaner-state">
+
+                        {% if cleaning_request.status == "in_progress" %}
+                            Cleaning now
+
+                        {% elif cleaning_request.status == "completed" %}
+                            Work completed
+
+                        {% elif cleaning_request.status == "confirmed" %}
+                            Confirmed
+
+                        {% else %}
+                            Assigned
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div class="sr-empty-cleaner">
+
+                    <div>◷</div>
+
+                    <section>
+                        <strong>Cleaner not assigned yet</strong>
+
+                        <p>
+                            Your hostel warden will assign an available
+                            cleaner to this request.
+                        </p>
+                    </section>
+
+                </div>
+
+                {% endif %}
+
+            </article>
+
+
+            <!-- ================= REMARKS ================= -->
+
+            <article class="sr-panel">
+
+                <header class="sr-panel-header">
+
+                    <div class="sr-panel-icon">☰</div>
+
+                    <div>
+                        <p>DESCRIPTION &amp; INSTRUCTIONS</p>
+                        <h2>Room cleaning description</h2>
+                    </div>
+
+                </header>
+
+
+                <div class="sr-remarks">
+
+                    {% if cleaning_request.get_description %}
+
+                        {{ cleaning_request.get_description|linebreaksbr }}
+
+                    {% else %}
+
+                        <span class="sr-check">✓</span>
+
+                        <p>
+                            Standard room cleaning requested. No additional specific instructions provided.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+
+            <!-- ================================================= -->
+            <!-- STUDENT VERIFICATION -->
+            <!-- ================================================= -->
+
+            {% if cleaning_request.status == "completed" %}
+
+            <article
+                class="sr-panel sr-verification"
+                id="student-verification"
+            >
+
+                <header class="sr-panel-header">
+
+                    <div class="sr-panel-icon sr-verification-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <p>STUDENT VERIFICATION</p>
+                        <h2>Confirm your room cleaning</h2>
+                    </div>
+
+                </header>
+
+
+                <div class="sr-verification-notice">
+
+                    <div class="sr-big-check">✓</div>
+
+                    <div>
+
+                        <strong>
+                            Cleaner marked this job as completed
+                        </strong>
+
+                        <p>
+                            Check your room before confirming.
+                            Your verification will close the cleaning request.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    method="post"
+                    action="{% url 'submit_feedback' cleaning_request.id %}"
+                    class="sr-verification-form"
+                >
+
+                    {% csrf_token %}
+
+
+                    <!-- ROOM STATUS -->
+
+                    <div class="sr-form-group">
+
+                        <label class="sr-form-label">
+                            WAS YOUR ROOM CLEANED?
+                        </label>
+
+
+                        <div class="sr-choice-grid">
+
+
+                            <!-- YES -->
+
+                            <label class="sr-choice sr-choice-yes">
+
+                                <input
+                                    type="radio"
+                                    name="room_status"
+                                    value="cleaned"
+                                    required
+                                >
+
+                                <div class="sr-choice-icon">
+                                    ✓
+                                </div>
+
+                                <div>
+                                    <strong>Yes, room cleaned</strong>
+
+                                    <span>
+                                        The requested cleaning was completed.
+                                    </span>
+                                </div>
+
+                            </label>
+
+
+                            <!-- NO -->
+
+                            <label class="sr-choice sr-choice-no">
+
+                                <input
+                                    type="radio"
+                                    name="room_status"
+                                    value="not_cleaned"
+                                    required
+                                >
+
+                                <div class="sr-choice-icon">
+                                    ×
+                                </div>
+
+                                <div>
+                                    <strong>No, not cleaned</strong>
+
+                                    <span>
+                                        The room was not cleaned as requested.
+                                    </span>
+                                </div>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RATING -->
+
+                    <div class="sr-form-group">
+
+                        <label for="rating" class="sr-form-label">
+                            CLEANING RATING
+                            <small>Optional</small>
+                        </label>
+
+                        <select
+                            id="rating"
+                            name="rating"
+                            class="sr-select"
+                        >
+
+                            <option value="">
+                                Select a rating
+                            </option>
+
+                            <option value="5">
+                                ★★★★★ - Excellent
+                            </option>
+
+                            <option value="4">
+                                ★★★★☆ - Good
+                            </option>
+
+                            <option value="3">
+                                ★★★☆☆ - Average
+                            </option>
+
+                            <option value="2">
+                                ★★☆☆☆ - Poor
+                            </option>
+
+                            <option value="1">
+                                ★☆☆☆☆ - Very poor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- COMMENTS -->
+
+                    <div class="sr-form-group">
+
+                        <label for="comments" class="sr-form-label">
+                            COMMENTS
+                            <small>Optional</small>
+                        </label>
+
+                        <textarea
+                            id="comments"
+                            name="comments"
+                            rows="5"
+                            class="sr-textarea"
+                            placeholder="Tell us about the cleaning service..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="sr-submit"
+                    >
+                        <span>Submit verification</span>
+                        <strong>→</strong>
+                    </button>
+
+                </form>
+
+            </article>
+
+
+            <!-- ================= CONFIRMED ================= -->
+
+            {% elif cleaning_request.status == "confirmed" %}
+
+            <article class="sr-panel sr-result sr-result-success">
+
+                <div class="sr-result-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <p class="sr-eyebrow">
+                        STUDENT VERIFIED
+                    </p>
+
+                    <h2>
+                        Room cleaning confirmed
+                    </h2>
+
+                    <p>
+                        You confirmed that the room cleaning was completed
+                        successfully. This cleaning request is now closed.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+            <!-- ================= NOT CLEANED ================= -->
+
+            {% elif cleaning_request.status == "not_cleaned" %}
+
+            <article class="sr-panel sr-result sr-result-problem">
+
+                <div class="sr-result-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <p class="sr-eyebrow">
+                        CLEANING ISSUE
+                    </p>
+
+                    <h2>
+                        Room marked as not cleaned
+                    </h2>
+
+                    <p>
+                        You reported that the cleaning was not completed.
+                        This request has been marked for further review.
+                    </p>
+
+                </div>
+
+            </article>
+
+            {% endif %}
+
+        </main>
+
+
+        <!-- ================================================= -->
+        <!-- RIGHT SIDE -->
+        <!-- ================================================= -->
+
+        <aside class="sr-sidebar">
+
+
+            <!-- ================= TIMELINE ================= -->
+
+            <article class="sr-side-card">
+
+                <p class="sr-side-label">
+                    REQUEST PROGRESS
+                </p>
+
+                <h2>Cleaning timeline</h2>
+
+
+                <div class="sr-timeline">
+
+
+                    <!-- STEP 1 -->
+
+                    <div class="sr-timeline-step done">
+
+                        <div class="sr-step-circle">
+                            ✓
+                        </div>
+
+                        <div>
+                            <strong>Request submitted</strong>
+                            <span>Your request was created.</span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- STEP 2 -->
+
+                    <div class="
+                        sr-timeline-step
+                        {% if cleaning_request.status == 'pending' %}
+                            current
+                        {% else %}
+                            done
+                        {% endif %}
+                    ">
+
+                        <div class="sr-step-circle">
+
+                            {% if cleaning_request.status == "pending" %}
+                                2
+                            {% else %}
+                                ✓
+                            {% endif %}
+
+                        </div>
+
+                        <div>
+                            <strong>Warden review</strong>
+                            <span>Request reviewed by hostel warden.</span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- STEP 3 -->
+
+                    <div class="
+                        sr-timeline-step
+
+                        {% if cleaning_request.status == 'assigned' %}
+                            current
+
+                        {% elif cleaning_request.status == 'in_progress' or cleaning_request.status == 'completed' or cleaning_request.status == 'confirmed' or cleaning_request.status == 'not_cleaned' %}
+                            done
+
+                        {% endif %}
+                    ">
+
+                        <div class="sr-step-circle">
+
+                            {% if cleaning_request.status == "in_progress" or cleaning_request.status == "completed" or cleaning_request.status == "confirmed" or cleaning_request.status == "not_cleaned" %}
+                                ✓
+                            {% else %}
+                                3
+                            {% endif %}
+
+                        </div>
+
+                        <div>
+                            <strong>Cleaner assigned</strong>
+                            <span>Cleaner assigned to your room.</span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- STEP 4 -->
+
+                    <div class="
+                        sr-timeline-step
+
+                        {% if cleaning_request.status == 'in_progress' %}
+                            current
+
+                        {% elif cleaning_request.status == 'completed' or cleaning_request.status == 'confirmed' or cleaning_request.status == 'not_cleaned' %}
+                            done
+
+                        {% endif %}
+                    ">
+
+                        <div class="sr-step-circle">
+
+                            {% if cleaning_request.status == "completed" or cleaning_request.status == "confirmed" or cleaning_request.status == "not_cleaned" %}
+                                ✓
+                            {% else %}
+                                4
+                            {% endif %}
+
+                        </div>
+
+                        <div>
+                            <strong>Cleaning started</strong>
+                            <span>Cleaner starts room cleaning.</span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- STEP 5 -->
+
+                    <div class="
+                        sr-timeline-step
+
+                        {% if cleaning_request.status == 'completed' %}
+                            done
+
+                        {% elif cleaning_request.status == 'confirmed' or cleaning_request.status == 'not_cleaned' %}
+                            done
+
+                        {% endif %}
+                    ">
+
+                        <div class="sr-step-circle">
+
+                            {% if cleaning_request.status == "completed" or cleaning_request.status == "confirmed" or cleaning_request.status == "not_cleaned" %}
+                                ✓
+                            {% else %}
+                                5
+                            {% endif %}
+
+                        </div>
+
+                        <div>
+                            <strong>Cleaner completed</strong>
+                            <span>Cleaner marks the work completed.</span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- STEP 6 -->
+
+                    <div class="
+                        sr-timeline-step
+
+                        {% if cleaning_request.status == 'completed' %}
+                            current
+
+                        {% elif cleaning_request.status == 'confirmed' %}
+                            done
+
+                        {% elif cleaning_request.status == 'not_cleaned' %}
+                            problem
+
+                        {% endif %}
+                    ">
+
+                        <div class="sr-step-circle">
+
+                            {% if cleaning_request.status == "confirmed" %}
+                                ✓
+
+                            {% elif cleaning_request.status == "not_cleaned" %}
+                                !
+
+                            {% else %}
+                                6
+                            {% endif %}
+
+                        </div>
+
+                        <div>
+
+                            <strong>Student verification</strong>
+
+                            <span>
+
+                                {% if cleaning_request.status == "completed" %}
+
+                                    Waiting for your confirmation.
+
+                                {% elif cleaning_request.status == "confirmed" %}
+
+                                    Cleaning confirmed by you.
+
+                                {% elif cleaning_request.status == "not_cleaned" %}
+
+                                    Cleaning issue reported.
+
+                                {% else %}
+
+                                    Available after cleaning is completed.
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- ================= ACTION ================= -->
+
+            <article class="sr-side-card">
+
+                <p class="sr-side-label">
+                    REQUEST ACTION
+                </p>
+
+                <h2>Manage request</h2>
+
+
+                {% if cleaning_request.status == "completed" %}
+
+                <div class="sr-action-notice">
+
+                    <span>✓</span>
+
+                    <div>
+                        <strong>Cleaner finished</strong>
+
+                        <p>
+                            Check your room and confirm whether
+                            cleaning was completed.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="#student-verification"
+                    class="sr-primary-action"
+                >
+                    Verify cleaning
+                    <strong>→</strong>
+                </a>
+
+
+                {% elif cleaning_request.status == "confirmed" %}
+
+                <div class="sr-action-success">
+
+                    <span>✓</span>
+
+                    <div>
+                        <strong>Request completed</strong>
+
+                        <p>
+                            You confirmed this cleaning request.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                {% elif cleaning_request.status == "not_cleaned" %}
+
+                <div class="sr-action-problem">
+
+                    <span>!</span>
+
+                    <div>
+                        <strong>Issue reported</strong>
+
+                        <p>
+                            You reported that the room was not cleaned.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                {% elif cleaning_request.status == "pending" %}
+
+                <form
+                    method="post"
+                    action="{% url 'cancel_request' cleaning_request.id %}"
+                    onsubmit="return confirm('Are you sure you want to cancel this request?');"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="sr-cancel-button"
+                    >
+                        Cancel request
+                    </button>
+
+                </form>
+
+
+                {% else %}
+
+                <div class="sr-processing">
+
+                    <span>◷</span>
+
+                    <p>
+                        This request is currently being processed.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+
+                <a
+                    href="{% url 'student_requests' %}"
+                    class="sr-secondary-action"
+                >
+                    View all requests
+                </a>
+
+            </article>
+
+
+            <!-- ================= ACCOUNT ================= -->
+
+            <article class="sr-account">
+
+                <div class="sr-account-avatar">
+                    {{ request.user.name|default:request.user.email|first|upper }}
+                </div>
+
+                <div>
+
+                    <span>REQUEST CREATED BY</span>
+
+                    <strong>
+                        {{ request.user.name|default:"Student" }}
+                    </strong>
+
+                    <small>
+                        {{ request.user.email }}
+                    </small>
+
+                </div>
+
+            </article>
+
+        </aside>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="sr-footer">
+
+        <span>
+            © 2026 CleanStay VIT
+        </span>
+
+        <span>
+            Student Portal · Secure Cleaning Request Tracking
+        </span>
+
+    </footer>
+
+</div>
+
+{% endblock %}

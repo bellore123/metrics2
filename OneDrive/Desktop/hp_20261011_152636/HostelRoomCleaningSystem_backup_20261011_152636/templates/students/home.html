@@ -1,0 +1,1046 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Student Dashboard | CleanStay VIT
+{% endblock %}
+
+{% block body_class %}
+student-dashboard-body
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/student_dashboard.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<main class="student-app">
+
+    <!-- =====================================================
+         DESKTOP SIDEBAR
+    ====================================================== -->
+    <aside class="student-sidebar-nav">
+
+        <a
+            href="{% url 'student_home' %}"
+            class="sidebar-brand"
+        >
+            <div class="sidebar-brand-icon">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path
+                        d="M8 23L24 10L40 23V39H8V23Z"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linejoin="round"
+                    />
+
+                    <path
+                        d="M19 39V28H29V39"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                    />
+
+                    <path
+                        d="M31 10L33 13L37 15L33 17L31 20L29 17L25 15L29 13Z"
+                        fill="currentColor"
+                    />
+                </svg>
+            </div>
+
+            <div>
+                <strong>CleanStay VIT</strong>
+                <span>Student Portal</span>
+            </div>
+        </a>
+
+
+        <nav class="sidebar-menu">
+
+            <a
+                href="{% url 'student_home' %}"
+                class="sidebar-link active"
+            >
+                <span class="sidebar-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M4 11L12 4L20 11V20H4V11Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </span>
+
+                <span>Home</span>
+            </a>
+
+
+            <a
+                href="{% url 'student_requests' %}"
+                class="sidebar-link"
+            >
+                <span class="sidebar-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M8 5H20M8 12H20M8 19H20"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                        />
+
+                        <circle cx="4" cy="5" r="1.4" fill="currentColor"/>
+                        <circle cx="4" cy="12" r="1.4" fill="currentColor"/>
+                        <circle cx="4" cy="19" r="1.4" fill="currentColor"/>
+                    </svg>
+                </span>
+
+                <span>My Requests</span>
+            </a>
+
+
+            <a
+                href="{% url 'create_cleaning_request' %}"
+                class="sidebar-link"
+            >
+                <span class="sidebar-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="8"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        />
+
+                        <path
+                            d="M12 8V16M8 12H16"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                </span>
+
+                <span>New Request</span>
+            </a>
+
+
+            <a
+                href="{% url 'student_hostel_setup' %}"
+                class="sidebar-link"
+            >
+                <span class="sidebar-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect
+                            x="6"
+                            y="3"
+                            width="12"
+                            height="18"
+                            rx="2"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        />
+
+                        <circle cx="14" cy="12" r="1" fill="currentColor"/>
+                    </svg>
+                </span>
+
+                <span>My Room</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-security-card">
+
+            <div class="sidebar-security-icon">
+                ✓
+            </div>
+
+            <div>
+                <strong>Secure Access</strong>
+                <span>Verified Student Portal</span>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN AREA
+    ====================================================== -->
+    <section class="student-main-area">
+
+
+        <!-- TOP BAR -->
+        <header class="student-topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    type="button"
+                    class="mobile-menu-button"
+                    aria-label="Open menu"
+                >
+                    ☰
+                </button>
+
+                <div class="student-portal-pill">
+                    <span>✓</span>
+                    Student cleaning portal
+                </div>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="notification-dropdown-wrapper" style="position:relative;">
+                    <button
+                        type="button"
+                        class="notification-button"
+                        id="notificationToggleBtn"
+                        aria-label="Notifications"
+                        onclick="toggleNotificationDropdown()"
+                    >
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M6 17H18L16.5 15V10C16.5 7.4 14.6 5.2 12 4.7C9.4 5.2 7.5 7.4 7.5 10V15L6 17Z"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M10 19C10.6 20 11.2 20.5 12 20.5C12.8 20.5 13.4 20 14 19"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+
+                        {% if unread_notifications_count %}
+                            <span class="notification-count" style="background:#b42318;color:#fff;">
+                                {{ unread_notifications_count }}
+                            </span>
+                        {% endif %}
+                    </button>
+
+                    <!-- Notifications Dropdown Panel -->
+                    <div id="notificationDropdownMenu" style="display:none;position:absolute;right:0;top:46px;width:340px;background:#ffffff;border:1px solid #dce5da;border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,0.12);z-index:999;overflow:hidden;">
+                        <div style="padding:12px 16px;background:#f2f8ef;border-bottom:1px solid #dce5da;display:flex;align-items:center;justify-content:space-between;">
+                            <strong style="font-size:13.5px;color:#103c25;">Room Notifications</strong>
+                            <span style="font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:10px;background:#145c34;color:#fff;">
+                                {{ unread_notifications_count }} unread
+                            </span>
+                        </div>
+                        <div style="max-height:300px;overflow-y:auto;">
+                            {% if user_notifications %}
+                                {% for notif in user_notifications %}
+                                <div style="padding:12px 16px;border-bottom:1px solid #e8eee6;{% if not notif.is_read %}background:#fbfcf8;{% endif %}">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                                        <strong style="font-size:13px;color:#14251b;">{{ notif.title }}</strong>
+                                        <small style="font-size:11px;color:#6e7b73;">{{ notif.created_at|date:"M d, H:i" }}</small>
+                                    </div>
+                                    <p style="margin:0;font-size:12.5px;color:#3e4c44;line-height:1.4;">{{ notif.message }}</p>
+                                    {% if notif.related_request %}
+                                    <div style="margin-top:6px;">
+                                        <a href="{% url 'student_request_detail' notif.related_request.id %}" style="font-size:12px;color:#168b49;font-weight:600;text-decoration:none;">View Request Details →</a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div style="padding:24px;text-align:center;color:#6e7b73;font-size:13px;">
+                                    No notifications yet.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="topbar-profile">
+
+                    <div class="topbar-avatar">
+                        {{ request.user.name|default:request.user.email|first|upper }}
+                    </div>
+
+                    <div class="topbar-profile-copy">
+                        <strong>
+                            {{ request.user.name|default:"Student" }}
+                        </strong>
+
+                        <span>Student</span>
+                    </div>
+
+                    <a
+                        href="{% url 'logout' %}"
+                        class="topbar-logout"
+                    >
+                        Logout
+                    </a>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- DJANGO MESSAGES -->
+        {% if messages %}
+
+        <section class="student-messages">
+
+            {% for message in messages %}
+
+            <div class="student-message {% if message.tags %}message-{{ message.tags }}{% endif %}">
+
+                <span>
+                    {{ message }}
+                </span>
+
+                <button
+                    type="button"
+                    onclick="this.parentElement.remove()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+            {% endfor %}
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             ROOMMATE ACTIVE CLEANING REQUEST ALERT
+        ================================================== -->
+        {% if active_room_request and is_roommate_request %}
+        <section class="roommate-request-alert-banner" style="margin-bottom:24px;padding:20px 24px;background:#fef3f2;border:1.5px solid #fecdca;border-radius:16px;box-shadow:0 6px 20px rgba(180,35,24,0.08);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:flex-start;gap:16px;max-width:780px;">
+                <div style="width:44px;height:44px;border-radius:12px;background:#fee4e2;color:#b42318;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">
+                    🔔
+                </div>
+                <div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+                        <strong style="font-size:16px;color:#912018;font-weight:700;">
+                            Room Cleaning Already Requested by Roommate!
+                        </strong>
+                        <span style="font-size:12px;padding:2px 8px;border-radius:6px;background:#fee4e2;color:#b42318;font-weight:600;">
+                            {{ active_room_request.get_status_display }}
+                        </span>
+                    </div>
+                    <p style="margin:0;font-size:13.5px;color:#7a271a;line-height:1.5;">
+                        Your roommate <strong>{{ active_room_request.student.user.name|default:active_room_request.student.user.email }}</strong> has already raised a cleaning request for <strong>{{ current_allocation.block }} – Room {{ current_allocation.room_number }}</strong> (Request #{{ active_room_request.id }} · Scheduled for {{ active_room_request.cleaning_date|date:"d M Y" }} at {{ active_room_request.get_time_slot_display }}).
+                        You cannot submit another request until this existing request is completed.
+                    </p>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <a href="{% url 'student_request_detail' active_room_request.id %}" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#b42318;color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:13.5px;box-shadow:0 4px 12px rgba(180,35,24,0.2);">
+                    <span>View Request Details</span>
+                    <strong>→</strong>
+                </a>
+            </div>
+        </section>
+        {% endif %}
+
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+        <section class="dashboard-hero-card">
+
+
+            <div class="dashboard-hero-copy">
+
+                <p class="dashboard-kicker">
+                    STUDENT PORTAL
+                </p>
+
+                <h1>
+                    Welcome back,
+                    <span>
+                        {{ request.user.name|default:"Student" }}
+                    </span>
+                    👋
+                </h1>
+
+                <p class="dashboard-description">
+                    Request, manage and track your hostel room-cleaning
+                    services from one secure portal.
+                </p>
+
+
+                {% if current_allocation %}
+
+                <div class="dashboard-room-card">
+
+                    <div class="room-card-icon">
+                        ▦
+                    </div>
+
+                    <div>
+                        <span>Current room</span>
+
+                        <strong>
+                            {{ current_allocation.block }}
+                            · Room {{ current_allocation.room_number }}
+                        </strong>
+
+                        <p>
+                            {{ current_allocation.get_block_display }}
+                        </p>
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div class="dashboard-room-card room-missing">
+
+                    <div class="room-card-icon">
+                        !
+                    </div>
+
+                    <div>
+                        <span>Room setup required</span>
+
+                        <strong>
+                            Add your hostel details
+                        </strong>
+
+                        <p>
+                            Set your block and room before requesting cleaning.
+                        </p>
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                <div class="dashboard-hero-buttons">
+
+                    {% if current_allocation %}
+
+                    <a
+                        href="{% url 'create_cleaning_request' %}"
+                        class="hero-main-button"
+                    >
+                        <span>＋</span>
+                        Request Cleaning
+                        <strong>→</strong>
+                    </a>
+
+                    {% else %}
+
+                    <a
+                        href="{% url 'student_hostel_setup' %}"
+                        class="hero-main-button"
+                    >
+                        <span>＋</span>
+                        Add Your Room
+                        <strong>→</strong>
+                    </a>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{% url 'student_requests' %}"
+                        class="hero-secondary-button"
+                    >
+                        View My Requests
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Student character -->
+            <div class="dashboard-student-art">
+
+                <div class="student-art-background"></div>
+
+                <div class="student-character-crop">
+                    <div class="student-character-image"></div>
+                </div>
+
+
+                <div class="hero-floating-card hero-floating-booking">
+
+                    <div class="floating-icon">
+                        ▦
+                    </div>
+
+                    <div>
+                        <strong>Easy booking</strong>
+                        <span>Choose your schedule</span>
+                    </div>
+
+                </div>
+
+
+                <div class="hero-floating-card hero-floating-track">
+
+                    <div class="floating-icon floating-check">
+                        ✓
+                    </div>
+
+                    <div>
+                        <strong>Track cleaning</strong>
+                        <span>See live status</span>
+                    </div>
+
+                </div>
+
+
+                <span class="hero-decoration hero-decoration-one">✦</span>
+                <span class="hero-decoration hero-decoration-two">✦</span>
+                <span class="hero-decoration hero-decoration-three">✦</span>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             STAT CARDS
+        ================================================== -->
+        <section class="dashboard-summary-grid">
+
+            <article class="summary-card">
+
+                <div class="summary-icon">
+                    ▦
+                </div>
+
+                <div>
+                    <span>Recent requests</span>
+
+                    <strong>
+                        {{ latest_requests|length }}
+                    </strong>
+
+                    <p>
+                        Your latest cleaning records
+                    </p>
+                </div>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <div class="summary-icon">
+                    ▦
+                </div>
+
+                <div>
+                    <span>Current block</span>
+
+                    <strong>
+                        {% if current_allocation %}
+                            {{ current_allocation.block }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </strong>
+
+                    <p>
+                        Your active hostel allocation
+                    </p>
+                </div>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <div class="summary-icon summary-icon-success">
+                    ✓
+                </div>
+
+                <div>
+                    <span>Account status</span>
+
+                    <strong>
+                        Active
+                    </strong>
+
+                    <p>
+                        Verified VIT student
+                    </p>
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =================================================
+             CONTENT GRID
+        ================================================== -->
+        <section class="dashboard-main-grid">
+
+
+            <!-- =================================================
+                 RECENT REQUESTS
+            ================================================== -->
+            <section class="recent-cleaning-card">
+
+                <header class="dashboard-section-heading">
+
+                    <div>
+                        <p>YOUR CLEANING ACTIVITY</p>
+
+                        <h2>
+                            Recent requests
+                        </h2>
+                    </div>
+
+                    <a href="{% url 'student_requests' %}">
+                        View all →
+                    </a>
+
+                </header>
+
+
+                {% if latest_requests %}
+
+                <div class="dashboard-request-list">
+
+                    {% for cleaning_request in latest_requests %}
+
+                    <a
+                        href="{% url 'student_request_detail' cleaning_request.id %}"
+                        class="dashboard-request-row"
+                    >
+
+                        <div class="dashboard-request-date">
+
+                            <strong>
+                                {{ cleaning_request.cleaning_date|date:"d" }}
+                            </strong>
+
+                            <span>
+                                {{ cleaning_request.cleaning_date|date:"M" }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-request-info">
+
+                            <strong>
+                                {{ cleaning_request.get_cleaning_type_display|default:cleaning_request.cleaning_type }}
+                            </strong>
+
+                            <span>
+                                {{ cleaning_request.get_time_slot_display|default:cleaning_request.time_slot }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-request-status-area">
+
+                            {% if cleaning_request.status == "pending" %}
+
+                            <span class="animated-status status-pending">
+                                <span class="status-symbol">⌛</span>
+                                Pending
+                                <i></i>
+                            </span>
+
+
+                            {% elif cleaning_request.status == "assigned" %}
+
+                            <span class="animated-status status-assigned">
+                                <span class="status-symbol">♙</span>
+                                Assigned
+                                <i></i>
+                            </span>
+
+
+                            {% elif cleaning_request.status == "in_progress" %}
+
+                            <span class="animated-status status-progress">
+                                <span class="status-symbol status-broom">⌁</span>
+                                In Progress
+                                <i></i>
+                            </span>
+
+
+                            {% elif cleaning_request.status == "completed" %}
+
+                            <span class="animated-status status-completed">
+                                <span class="status-symbol">✓</span>
+                                Completed
+                                <i></i>
+                            </span>
+
+
+                            {% elif cleaning_request.status == "confirmed" %}
+
+                            <span class="animated-status status-completed">
+                                <span class="status-symbol">✓</span>
+                                Confirmed
+                            </span>
+
+
+                            {% elif cleaning_request.status == "not_cleaned" %}
+
+                            <span class="animated-status status-problem">
+                                Not Cleaned
+                            </span>
+
+
+                            {% elif cleaning_request.status == "cancelled" %}
+
+                            <span class="animated-status status-problem">
+                                Cancelled
+                            </span>
+
+
+                            {% elif cleaning_request.status == "rejected" %}
+
+                            <span class="animated-status status-problem">
+                                Rejected
+                            </span>
+
+
+                            {% else %}
+
+                            <span class="animated-status">
+                                {{ cleaning_request.get_status_display }}
+                            </span>
+
+                            {% endif %}
+
+
+                            <strong class="dashboard-row-arrow">
+                                →
+                            </strong>
+
+                        </div>
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+
+                {% else %}
+
+                <div class="dashboard-empty-state">
+
+                    <div class="empty-cleaning-animation">
+                        <span class="empty-broom">⌁</span>
+                        <span class="empty-sparkle sparkle-a">✦</span>
+                        <span class="empty-sparkle sparkle-b">✦</span>
+                    </div>
+
+                    <h3>
+                        No cleaning requests yet
+                    </h3>
+
+                    <p>
+                        Your cleaning requests and their progress
+                        will appear here.
+                    </p>
+
+
+                    {% if current_allocation %}
+
+                    <a href="{% url 'create_cleaning_request' %}">
+                        Create your first request →
+                    </a>
+
+                    {% else %}
+
+                    <a href="{% url 'student_hostel_setup' %}">
+                        Add room details →
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- =================================================
+                 RIGHT COLUMN
+            ================================================== -->
+            <aside class="dashboard-right-column">
+
+
+                <!-- QUICK ACTION -->
+                <!-- =================================================
+     QUICK ACTION
+================================================== -->
+<article class="dashboard-quick-action">
+
+    <div class="quick-action-copy">
+
+        <p class="quick-action-label">
+            QUICK ACTION
+        </p>
+
+        <h3>
+            Schedule room cleaning
+        </h3>
+
+        <p class="quick-action-description">
+            Choose the cleaning service, preferred date
+            and time. Your block warden will review
+            your request.
+        </p>
+
+        {% if current_allocation %}
+
+        <a
+            href="{% url 'create_cleaning_request' %}"
+            class="quick-action-button"
+        >
+            <span>
+                Create cleaning request
+            </span>
+
+            <strong>
+                →
+            </strong>
+        </a>
+
+        {% else %}
+
+        <a
+            href="{% url 'student_hostel_setup' %}"
+            class="quick-action-button"
+        >
+            <span>
+                Add room details
+            </span>
+
+            <strong>
+                →
+            </strong>
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Cleaning service artwork -->
+    <div
+        class="quick-service-art"
+        aria-hidden="true"
+    >
+
+        <!-- Clipboard -->
+        <div class="service-checklist">
+
+            <div class="checklist-clip"></div>
+
+            <div class="checklist-row">
+                <span>✓</span>
+                <i></i>
+            </div>
+
+            <div class="checklist-row">
+                <span>✓</span>
+                <i></i>
+            </div>
+
+            <div class="checklist-row">
+                <span>✓</span>
+                <i></i>
+            </div>
+
+        </div>
+
+
+        <!-- Spray bottle -->
+        <div class="service-spray">
+
+            <div class="spray-head"></div>
+
+            <div class="spray-label"></div>
+
+        </div>
+
+
+        <!-- Cleaning cloth -->
+        <div class="service-cloth"></div>
+
+    </div>
+
+</article>
+
+
+                <!-- STATUS GUIDE -->
+                <article class="request-status-guide">
+
+                    <p class="guide-label">
+                        REQUEST STATUS GUIDE
+                    </p>
+
+                    <div class="status-guide-row">
+
+                        <div class="guide-status-icon guide-assigned">
+                            ♙
+                        </div>
+
+                        <div class="guide-status-copy">
+                            <strong>Assigned</strong>
+                            <span>A cleaner has been assigned to your request.</span>
+                        </div>
+
+                        <div class="guide-dots assigned-dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-guide-row">
+
+                        <div class="guide-status-icon guide-pending">
+                            ⌛
+                        </div>
+
+                        <div class="guide-status-copy">
+                            <strong>Pending</strong>
+                            <span>Your request is waiting for assignment.</span>
+                        </div>
+
+                        <div class="guide-dots pending-dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-guide-row">
+
+                        <div class="guide-status-icon guide-progress">
+                            ⌁
+                        </div>
+
+                        <div class="guide-status-copy">
+                            <strong>In Progress</strong>
+                            <span>Cleaning is currently in progress.</span>
+                        </div>
+
+                        <div class="guide-dots progress-dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-guide-row">
+
+                        <div class="guide-status-icon guide-completed">
+                            ✓
+                        </div>
+
+                        <div class="guide-status-copy">
+                            <strong>Completed</strong>
+                            <span>Cleaning completed. Please confirm.</span>
+                        </div>
+
+                        <div class="guide-dots completed-dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </aside>
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+        <footer class="student-dashboard-footer">
+
+            <div>
+                © 2026 CleanStay VIT
+            </div>
+
+            <div>
+                Hostel Cleaning Management System
+            </div>
+
+            <div class="footer-badges">
+                <span>✓ Secure</span>
+                <i></i>
+                <span>Reliable</span>
+                <i></i>
+                <span>Student Focused</span>
+            </div>
+
+        </footer>
+
+    </section>
+
+</main>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+function toggleNotificationDropdown() {
+    const menu = document.getElementById('notificationDropdownMenu');
+    if (menu) {
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+document.addEventListener('click', function(e) {
+    const wrapper = document.querySelector('.notification-dropdown-wrapper');
+    const menu = document.getElementById('notificationDropdownMenu');
+    if (wrapper && menu && !wrapper.contains(e.target)) {
+        menu.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

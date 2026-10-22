@@ -1,0 +1,144 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<div class="portal-page">
+
+    <!-- Welcome Banner -->
+    <div class="portal-welcome-banner">
+        <div class="welcome-text">
+            <h1>Welcome back, {{ request.user.name|default:"Administrator" }} 👋</h1>
+            <p>Here's an overview of the CleanStay VIT system today — {{ today }}.</p>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card stat-blue">
+            <div class="stat-icon">🎓</div>
+            <div class="stat-body">
+                <div class="stat-number">{{ total_students }}</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+        </div>
+        <div class="stat-card stat-purple">
+            <div class="stat-icon">🏛</div>
+            <div class="stat-body">
+                <div class="stat-number">{{ total_wardens }}</div>
+                <div class="stat-label">Wardens</div>
+            </div>
+        </div>
+        <div class="stat-card stat-teal">
+            <div class="stat-icon">🧹</div>
+            <div class="stat-body">
+                <div class="stat-number">{{ total_cleaners }}</div>
+                <div class="stat-label">Cleaners</div>
+            </div>
+        </div>
+        <div class="stat-card stat-orange">
+            <div class="stat-icon">📋</div>
+            <div class="stat-body">
+                <div class="stat-number">{{ total_requests }}</div>
+                <div class="stat-label">Total Requests</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Status Row -->
+    <div class="stats-grid stats-grid-5">
+        <div class="mini-stat mini-yellow">
+            <div class="mini-number">{{ pending_requests }}</div>
+            <div class="mini-label">Pending</div>
+        </div>
+        <div class="mini-stat mini-blue">
+            <div class="mini-number">{{ assigned_requests }}</div>
+            <div class="mini-label">Assigned</div>
+        </div>
+        <div class="mini-stat mini-indigo">
+            <div class="mini-number">{{ inprogress_requests }}</div>
+            <div class="mini-label">In Progress</div>
+        </div>
+        <div class="mini-stat mini-green">
+            <div class="mini-number">{{ completed_requests }}</div>
+            <div class="mini-label">Completed</div>
+        </div>
+        <div class="mini-stat mini-red">
+            <div class="mini-number">{{ rejected_requests }}</div>
+            <div class="mini-label">Rejected</div>
+        </div>
+    </div>
+
+    <!-- Recent Requests Table -->
+    <div class="portal-section">
+        <div class="section-header">
+            <h2>Recent Complaints &amp; Requests</h2>
+            <a href="{% url 'portal:portal_complaints' %}" class="btn-link">View All →</a>
+        </div>
+
+        {% if recent_requests %}
+        <div class="table-wrapper">
+            <table class="portal-table">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Student</th>
+                        <th>Reg No</th>
+                        <th>Block / Room</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in recent_requests %}
+                    <tr>
+                        <td class="id-cell">#{{ req.pk }}</td>
+                        <td>{{ req.student.user.name|default:req.student.user.email }}</td>
+                        <td><strong style="color:#4f46e5;">{{ req.student.get_registration_number }}</strong></td>
+                        <td>{{ req.hostel_allocation.block }} – Room {{ req.hostel_allocation.room_number }}</td>
+                        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ req.get_description }}">{{ req.get_description }}</td>
+                        <td><span class="badge badge-{{ req.status }}">{{ req.get_status_display }}</span></td>
+                        <td>{{ req.cleaning_date|date:"d M Y" }}</td>
+                        <td>
+                            <a href="{% url 'portal:portal_complaint_detail' req.pk %}" class="btn-sm">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <p>No requests found.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Quick Links -->
+    <div class="quick-links-grid">
+        <a href="{% url 'portal:portal_students' %}" class="quick-link-card">
+            <span class="ql-icon">🎓</span>
+            <span class="ql-label">Manage Students</span>
+        </a>
+        <a href="{% url 'portal:portal_wardens' %}" class="quick-link-card">
+            <span class="ql-icon">🏛</span>
+            <span class="ql-label">Manage Wardens</span>
+        </a>
+        <a href="{% url 'portal:portal_add_cleaner' %}" class="quick-link-card">
+            <span class="ql-icon">➕</span>
+            <span class="ql-label">Add Cleaner</span>
+        </a>
+        <a href="{% url 'portal:portal_complaints' %}" class="quick-link-card">
+            <span class="ql-icon">📋</span>
+            <span class="ql-label">All Complaints</span>
+        </a>
+    </div>
+
+</div>
+{% endblock %}

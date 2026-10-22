@@ -1,0 +1,779 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Cleaning Job | CleanStay VIT
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/cleaner_request_detail.css' %}"
+    >
+</head>
+
+<body>
+
+<div class="cleaner-job-page">
+
+    <!-- TOP BAR -->
+
+    <header class="cleaner-job-navbar">
+
+        <div class="job-brand">
+
+            <div class="job-brand-icon">
+                ✓
+            </div>
+
+            <div>
+                <strong>CleanStay VIT</strong>
+                <span>CLEANER PORTAL</span>
+            </div>
+
+        </div>
+
+
+        <nav class="job-nav">
+
+            <a href="{% url 'cleaner_home' %}">
+                Dashboard
+            </a>
+
+            <a href="{% url 'cleaner_home' %}#assignments"
+               class="active">
+                Assignments
+            </a>
+
+            <a href="{% url 'cleaner_home' %}#profile">
+                Profile
+            </a>
+
+        </nav>
+
+
+        <div class="job-user">
+
+            <div class="job-avatar">
+                {{ request.user.name|default:"C"|first|upper }}
+            </div>
+
+            <div>
+                <strong>
+                    {{ request.user.name|default:"Cleaner" }}
+                </strong>
+
+                <span>
+                    {{ cleaner.assigned_block|default:"Cleaner" }}
+                </span>
+            </div>
+
+            <a href="{% url 'logout' %}"
+               class="job-logout">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- HERO -->
+
+    <section class="job-hero">
+
+        <div class="job-hero-left">
+
+            <a href="{% url 'cleaner_home' %}"
+               class="back-link">
+                ← Back to assignments
+            </a>
+
+            <p class="eyebrow">
+                CLEANING JOB
+            </p>
+
+            <h1>
+                {{ cleaning_request.hostel_allocation.block }}
+                <span>
+                    Room {{ cleaning_request.hostel_allocation.room_number }}
+                </span>
+            </h1>
+
+            <p class="job-subtitle">
+                Review the room details, student information and
+                cleaning instructions before starting work.
+            </p>
+
+
+            <div class="job-location-card">
+
+                <div class="job-location-icon">
+                    ▦
+                </div>
+
+                <div>
+
+                    <small>
+                        SCHEDULE
+                    </small>
+
+                    <strong>
+                        {{ cleaning_request.cleaning_date|date:"d F Y" }}
+                    </strong>
+
+                    <span>
+                        {{ cleaning_request.get_time_slot_display }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="job-status-card">
+
+            <small>
+                CURRENT STATUS
+            </small>
+
+            <div class="status-row">
+
+                <strong class="status-badge status-{{ cleaning_request.status }}">
+                    {{ cleaning_request.get_status_display }}
+                </strong>
+
+
+                {% if cleaning_request.status == "assigned" %}
+
+                <div class="status-dots assigned-dots">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                </div>
+
+                {% elif cleaning_request.status == "in_progress" %}
+
+                <div class="status-dots progress-dots">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                </div>
+
+                {% elif cleaning_request.status == "completed" or cleaning_request.status == "confirmed" %}
+
+                <div class="completed-sparks">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <p>
+                Request #{{ cleaning_request.id }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <section class="job-summary-grid">
+
+        <article class="summary-card">
+
+            <div class="summary-icon">
+                ♙
+            </div>
+
+            <div>
+                <small>STUDENT</small>
+
+                <strong>
+                    {{ cleaning_request.student.user.name|default:"VIT Student" }}
+                </strong>
+
+                <span>
+                    {{ cleaning_request.student.user.email }}
+                </span>
+            </div>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <div class="summary-icon">
+                ☷
+            </div>
+
+            <div>
+                <small>CLEANING TYPE</small>
+
+                <strong>
+                    {{ cleaning_request.get_cleaning_type_display }}
+                </strong>
+
+                <span>
+                    Requested service
+                </span>
+            </div>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <div class="summary-icon">
+                ◷
+            </div>
+
+            <div>
+                <small>TIME SLOT</small>
+
+                <strong>
+                    {{ cleaning_request.get_time_slot_display }}
+                </strong>
+
+                <span>
+                    Scheduled time
+                </span>
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- MAIN CONTENT -->
+
+    <section class="job-content">
+
+        <!-- LEFT -->
+
+        <main class="job-main-column">
+
+
+            <!-- JOB DETAILS -->
+
+            <article class="job-panel">
+
+                <div class="panel-heading">
+
+                    <div class="panel-icon">
+                        ▦
+                    </div>
+
+                    <div>
+                        <p class="eyebrow">
+                            JOB DETAILS
+                        </p>
+
+                        <h2>
+                            Cleaning information
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="detail-grid">
+
+                    <div class="detail-item">
+
+                        <span>Room</span>
+
+                        <strong>
+                            {{ cleaning_request.hostel_allocation.block }}
+                            · Room {{ cleaning_request.hostel_allocation.room_number }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>Date</span>
+
+                        <strong>
+                            {{ cleaning_request.cleaning_date|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>Time</span>
+
+                        <strong>
+                            {{ cleaning_request.get_time_slot_display }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>Cleaning service</span>
+
+                        <strong>
+                            Room Cleaning
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- STUDENT -->
+
+            <article class="job-panel">
+
+                <div class="panel-heading">
+
+                    <div class="panel-icon">
+                        ♙
+                    </div>
+
+                    <div>
+                        <p class="eyebrow">
+                            STUDENT
+                        </p>
+
+                        <h2>
+                            Request submitted by
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="student-row">
+
+                    <div class="student-avatar">
+                        {{ cleaning_request.student.user.name|default:cleaning_request.student.user.email|first|upper }}
+                    </div>
+
+                    <div>
+
+                        <small>
+                            STUDENT NAME
+                        </small>
+
+                        <strong>
+                            {{ cleaning_request.student.user.name|default:"VIT Student" }}
+                        </strong>
+
+                        <span>
+                            {{ cleaning_request.student.user.email }}
+                        </span>
+
+                        <div style="margin-top:4px;">
+                            <span style="display:inline-block;padding:2px 8px;background:#e0e7ff;color:#3730a3;border-radius:4px;font-size:11px;font-weight:700;">
+                                Registration No: {{ cleaning_request.student.get_registration_number }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- INSTRUCTIONS -->
+
+            <article class="job-panel">
+
+                <div class="panel-heading">
+
+                    <div class="panel-icon">
+                        ≡
+                    </div>
+
+                    <div>
+                        <p class="eyebrow">
+                            DESCRIPTION &amp; INSTRUCTIONS
+                        </p>
+
+                        <h2>
+                            Room cleaning description
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="instruction-box">
+
+                    {% if cleaning_request.get_description %}
+
+                    <p>
+                        {{ cleaning_request.get_description|linebreaksbr }}
+                    </p>
+
+                    {% else %}
+
+                    <div class="no-instructions">
+
+                        <span>✓</span>
+
+                        <p>
+                            Standard room cleaning requested. No additional specific instructions provided.
+                        </p>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+            </article>
+
+        </main>
+
+
+        <!-- RIGHT ACTION PANEL -->
+
+        <aside class="job-side-column">
+
+
+            <!-- ACTION -->
+
+            <article class="action-card">
+
+                <p class="eyebrow">
+                    UPDATE PROGRESS
+                </p>
+
+                <h2>
+                    Manage this job
+                </h2>
+
+
+                {% if cleaning_request.status == "assigned" %}
+
+                <div class="action-info assigned-info">
+
+                    <span>
+                        1
+                    </span>
+
+                    <div>
+                        <strong>
+                            Ready to start
+                        </strong>
+
+                        <p>
+                            Confirm that you are at the correct room
+                            before starting.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <form
+                    method="post"
+                    action="{% url 'start_request' cleaning_request.id %}"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="action-button start-button"
+                    >
+                        <span>
+                            Start cleaning
+                        </span>
+
+                        <strong>
+                            →
+                        </strong>
+                    </button>
+
+                </form>
+
+
+                {% elif cleaning_request.status == "in_progress" %}
+
+                <div class="action-info progress-info">
+
+                    <span>
+                        ◷
+                    </span>
+
+                    <div>
+                        <strong>
+                            Cleaning in progress
+                        </strong>
+
+                        <p>
+                            Complete the requested service before
+                            marking the job finished.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <form
+                    method="post"
+                    action="{% url 'complete_request' cleaning_request.id %}"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="action-button complete-button"
+                    >
+                        <span>
+                            Mark as completed
+                        </span>
+
+                        <strong>
+                            ✓
+                        </strong>
+                    </button>
+
+                </form>
+
+
+                {% elif cleaning_request.status == "completed" %}
+
+                <div class="completed-box">
+
+                    <div>
+                        ✓
+                    </div>
+
+                    <h3>
+                        Cleaning completed
+                    </h3>
+
+                    <p>
+                        The job is finished. The student can now review
+                        and confirm the cleaning.
+                    </p>
+
+                </div>
+
+
+                {% elif cleaning_request.status == "confirmed" %}
+
+                <div class="completed-box">
+
+                    <div>
+                        ✓
+                    </div>
+
+                    <h3>
+                        Confirmed by student
+                    </h3>
+
+                    <p>
+                        This request has been fully completed
+                        and confirmed.
+                    </p>
+
+                </div>
+
+
+                {% else %}
+
+                <div class="locked-box">
+
+                    <div>
+                        i
+                    </div>
+
+                    <h3>
+                        No action required
+                    </h3>
+
+                    <p>
+                        This job cannot be updated at its current status.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </article>
+
+
+            <!-- WORKFLOW -->
+
+            <article class="workflow-card">
+
+                <p class="eyebrow">
+                    CLEANING WORKFLOW
+                </p>
+
+                <h2>
+                    Job progress
+                </h2>
+
+
+                <div class="workflow-step completed">
+
+                    <span>
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Job assigned
+                        </strong>
+
+                        <p>
+                            Warden assigned this request to you.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="workflow-line"></div>
+
+
+                <div class="workflow-step
+                    {% if cleaning_request.status == 'assigned' %}
+                    current
+                    {% elif cleaning_request.status == 'in_progress' or cleaning_request.status == 'completed' or cleaning_request.status == 'confirmed' %}
+                    completed
+                    {% endif %}">
+
+                    <span>
+                        {% if cleaning_request.status == "in_progress" or cleaning_request.status == "completed" or cleaning_request.status == "confirmed" %}
+                            ✓
+                        {% else %}
+                            2
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <strong>
+                            Start cleaning
+                        </strong>
+
+                        <p>
+                            Begin the requested room cleaning.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="workflow-line"></div>
+
+
+                <div class="workflow-step
+                    {% if cleaning_request.status == 'in_progress' %}
+                    current
+                    {% elif cleaning_request.status == 'completed' or cleaning_request.status == 'confirmed' %}
+                    completed
+                    {% endif %}">
+
+                    <span>
+                        {% if cleaning_request.status == "completed" or cleaning_request.status == "confirmed" %}
+                            ✓
+                        {% else %}
+                            3
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <strong>
+                            Complete work
+                        </strong>
+
+                        <p>
+                            Finish cleaning and update the job.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="workflow-line"></div>
+
+
+                <div class="workflow-step
+                    {% if cleaning_request.status == 'completed' %}
+                    current
+                    {% elif cleaning_request.status == 'confirmed' %}
+                    completed
+                    {% endif %}">
+
+                    <span>
+                        {% if cleaning_request.status == "confirmed" %}
+                            ✓
+                        {% else %}
+                            4
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <strong>
+                            Student confirms
+                        </strong>
+
+                        <p>
+                            Student reviews the completed service.
+                        </p>
+                    </div>
+
+                </div>
+
+            </article>
+
+        </aside>
+
+    </section>
+
+
+    <footer class="job-footer">
+
+        <span>
+            © 2026 CleanStay VIT
+        </span>
+
+        <div>
+            <span>
+                {{ cleaner.assigned_block|default:"Cleaner Portal" }}
+            </span>
+
+            <i></i>
+
+            <span>
+                Secure Cleaner Access
+            </span>
+        </div>
+
+    </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,759 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cleaner Dashboard | CleanStay VIT</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/cleaner_dashboard.css' %}">
+</head>
+
+<body>
+
+<div class="cleaner-page">
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="cleaner-navbar">
+
+        <div class="cleaner-brand">
+
+            <div class="brand-icon">
+                ✓
+            </div>
+
+            <div>
+                <strong>CleanStay VIT</strong>
+                <span>CLEANER PORTAL</span>
+            </div>
+
+        </div>
+
+
+        <nav class="cleaner-nav">
+
+            <a href="{% url 'cleaner_home' %}" class="active">
+                Dashboard
+            </a>
+
+            <a href="#assignments">
+                Assignments
+            </a>
+
+            <a href="#profile">
+                Profile
+            </a>
+
+        </nav>
+
+
+        <div class="cleaner-user">
+
+            <div class="cleaner-avatar">
+                {{ request.user.name|default:"C"|first|upper }}
+            </div>
+
+            <div>
+
+                <strong>
+                    {{ request.user.name|default:"Cleaner" }}
+                </strong>
+
+                <span>
+                    {{ cleaner.assigned_block|default:"Cleaner" }}
+                </span>
+
+            </div>
+
+            <a href="{% url 'logout' %}"
+               class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="cleaner-hero">
+
+        <div class="hero-left">
+
+            <p class="eyebrow">
+                TODAY'S WORK
+            </p>
+
+            <h1>
+                Hello,
+                <span>
+                    {{ request.user.name|default:"Cleaner" }}
+                </span>
+            </h1>
+
+            <p class="hero-description">
+                View your assigned rooms, start cleaning work and update
+                the completion status for your hostel block.
+            </p>
+
+
+            <div class="employee-card">
+
+                <div class="employee-icon">
+                    ♟
+                </div>
+
+                <div>
+
+                    <small>
+                        EMPLOYEE PROFILE
+                    </small>
+
+                    <strong>
+                        {{ cleaner.employee_id|default:"—" }}
+                    </strong>
+
+                    <span>
+                        Assigned block:
+                        {{ cleaner.assigned_block|default:"—" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-right">
+
+            <div class="availability-card">
+
+                <small>
+                    CURRENT AVAILABILITY
+                </small>
+
+                <strong>
+                    {% if cleaner.is_available %}
+                        Available
+                    {% else %}
+                        Busy
+                    {% endif %}
+                </strong>
+
+                <p>
+                    {% if cleaner.is_available %}
+                        You can receive new cleaning assignments.
+                    {% else %}
+                        You currently have active cleaning work.
+                    {% endif %}
+                </p>
+
+            </div>
+
+
+            <div class="today-card">
+
+                <small>
+                    TODAY
+                </small>
+
+                <strong>
+                    {{ today|date:"d F Y" }}
+                </strong>
+
+                <p>
+                    {{ today_count }}
+                    active job{{ today_count|pluralize }}
+                    scheduled today
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+
+    <section class="cleaner-stats">
+
+        <div class="stat-card assigned-stat">
+
+            <div class="stat-icon">
+                ▤
+            </div>
+
+            <div>
+
+                <small>
+                    ASSIGNED
+                </small>
+
+                <strong>
+                    {{ assigned_count }}
+                </strong>
+
+                <span>
+                    Waiting to start
+                </span>
+
+            </div>
+
+
+            <div class="status-animation blue-animation">
+                <i></i>
+                <i></i>
+                <i></i>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card progress-stat">
+
+            <div class="stat-icon">
+                ⚡
+            </div>
+
+            <div>
+
+                <small>
+                    IN PROGRESS
+                </small>
+
+                <strong>
+                    {{ in_progress_count }}
+                </strong>
+
+                <span>
+                    Currently cleaning
+                </span>
+
+            </div>
+
+
+            <div class="status-animation orange-animation">
+                <i></i>
+                <i></i>
+                <i></i>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card completed-stat">
+
+            <div class="stat-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <small>
+                    COMPLETED
+                </small>
+
+                <strong>
+                    {{ completed_count }}
+                </strong>
+
+                <span>
+                    Finished work
+                </span>
+
+            </div>
+
+
+            <div class="status-animation green-animation">
+                <i></i>
+                <i></i>
+                <i></i>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card today-stat">
+
+            <div class="stat-icon">
+                ▣
+            </div>
+
+            <div>
+
+                <small>
+                    TODAY'S JOBS
+                </small>
+
+                <strong>
+                    {{ today_count }}
+                </strong>
+
+                <span>
+                    Scheduled today
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <section class="cleaner-content">
+
+        <!-- LEFT -->
+
+        <main class="assignment-panel"
+              id="assignments">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        MY WORK
+                    </p>
+
+                    <h2>
+                        Assigned cleaning requests
+                    </h2>
+
+                </div>
+
+                <span>
+                    Showing {{ requests|length }}
+                    request{{ requests|length|pluralize }}
+                </span>
+
+            </div>
+
+
+            <!-- FILTER -->
+
+            <form method="get"
+                  class="filter-box">
+
+                <div class="filter-title">
+
+                    <div class="filter-icon">
+                        ☷
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Filter assignments
+                        </strong>
+
+                        <span>
+                            Show requests by current status.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="filter-buttons">
+
+                    <label class="filter-btn
+                        {% if not selected_status %}active{% endif %}">
+
+                        <input
+                            type="radio"
+                            name="status"
+                            value=""
+                            {% if not selected_status %}checked{% endif %}
+                            onchange="this.form.submit()">
+
+                        <span>All</span>
+
+                    </label>
+
+
+                    {% for value, label in status_choices %}
+
+                    <label class="filter-btn
+                        {% if selected_status == value %}active{% endif %}">
+
+                        <input
+                            type="radio"
+                            name="status"
+                            value="{{ value }}"
+                            {% if selected_status == value %}checked{% endif %}
+                            onchange="this.form.submit()">
+
+                        <span>
+                            {{ label }}
+                        </span>
+
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+
+            </form>
+
+
+            <!-- ================= REQUEST LIST ================= -->
+
+            <div class="assignment-list">
+
+                {% for cleaning_request in requests %}
+
+                <a href="{% url 'cleaner_request_detail' cleaning_request.id %}"
+                   class="assignment-card">
+
+                    <!-- ROOM -->
+
+                    <div class="room-box">
+
+                        <small>
+                            ROOM
+                        </small>
+
+                        <strong>
+                            {{ cleaning_request.hostel_allocation.room_number }}
+                        </strong>
+
+                        <span>
+                            {{ cleaning_request.hostel_allocation.block }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- MAIN -->
+
+                    <div class="assignment-main">
+
+                        <small>
+                            REQUEST #{{ cleaning_request.id }}
+                        </small>
+
+                        <h3>
+                            Room Cleaning
+                        </h3>
+
+                        <span class="request-status
+                            status-{{ cleaning_request.status }}">
+
+                            {{ cleaning_request.get_status_display }}
+
+                        </span>
+
+                        {% if cleaning_request.get_description %}
+                        <p style="font-size:12px;color:#6b7280;margin:6px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;" title="{{ cleaning_request.get_description }}">
+                            {{ cleaning_request.get_description }}
+                        </p>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- STUDENT -->
+
+                    <div class="assignment-info">
+
+                        <small>
+                            STUDENT
+                        </small>
+
+                        <strong>
+                            {{ cleaning_request.student.user.name|default:cleaning_request.student.user.email }}
+                        </strong>
+
+                        <span style="font-size:11px;color:#4f46e5;font-weight:700;">
+                            Reg: {{ cleaning_request.student.get_registration_number }}
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- DATE -->
+
+                    <div class="assignment-info">
+
+                        <small>
+                            DATE
+                        </small>
+
+                        <strong>
+                            {{ cleaning_request.cleaning_date|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- TIME -->
+
+                    <div class="assignment-info">
+
+                        <small>
+                            TIME
+                        </small>
+
+                        <strong>
+                            {{ cleaning_request.get_time_slot_display }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="assignment-arrow">
+                        →
+                    </div>
+
+                </a>
+
+                {% empty %}
+
+                <div class="empty-assignments">
+
+                    <div class="empty-icon">
+                        ✓
+                    </div>
+
+                    <h3>
+                        No assignments right now
+                    </h3>
+
+                    <p>
+                        New cleaning requests assigned to you
+                        will appear here.
+                    </p>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </main>
+
+
+        <!-- ================= RIGHT SIDE ================= -->
+
+        <aside class="cleaner-sidebar">
+
+
+            <!-- PROFILE -->
+
+            <div class="side-card profile-card"
+                 id="profile">
+
+                <div class="side-icon">
+                    ♟
+                </div>
+
+                <p class="eyebrow">
+                    CLEANER PROFILE
+                </p>
+
+                <h3>
+                    {{ request.user.name|default:"Cleaner" }}
+                </h3>
+
+
+                <div class="profile-row">
+
+                    <span>
+                        Employee ID
+                    </span>
+
+                    <strong>
+                        {{ cleaner.employee_id|default:"—" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <span>
+                        Assigned block
+                    </span>
+
+                    <strong>
+                        {{ cleaner.assigned_block|default:"—" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <span>
+                        Phone
+                    </span>
+
+                    <strong>
+                        {{ cleaner.phone_number|default:"—" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-row">
+
+                    <span>
+                        Availability
+                    </span>
+
+                    <strong class="available-text">
+
+                        {% if cleaner.is_available %}
+                            Available
+                        {% else %}
+                            Busy
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- WORKFLOW -->
+
+            <div class="side-card workflow-card">
+
+                <div class="side-icon">
+                    ▤
+                </div>
+
+                <p class="eyebrow">
+                    CLEANING WORKFLOW
+                </p>
+
+                <h3>
+                    How it works
+                </h3>
+
+
+                <div class="workflow-step">
+
+                    <span>1</span>
+
+                    <div>
+
+                        <strong>
+                            Open assignment
+                        </strong>
+
+                        <p>
+                            Review room and student details.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="workflow-step">
+
+                    <span>2</span>
+
+                    <div>
+
+                        <strong>
+                            Start cleaning
+                        </strong>
+
+                        <p>
+                            Update status to in progress.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="workflow-step">
+
+                    <span>3</span>
+
+                    <div>
+
+                        <strong>
+                            Complete work
+                        </strong>
+
+                        <p>
+                            Mark the cleaning as completed.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SIGNED IN -->
+
+            <div class="signed-card">
+
+                <div class="cleaner-avatar">
+                    {{ request.user.name|default:"C"|first|upper }}
+                </div>
+
+                <div>
+
+                    <small>
+                        SIGNED IN AS
+                    </small>
+
+                    <strong>
+                        {{ request.user.name|default:"Cleaner" }}
+                    </strong>
+
+                    <span>
+                        {{ request.user.email }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </section>
+
+
+    <footer>
+
+        © 2026 CleanStay VIT
+
+        <span>
+            {{ cleaner.assigned_block|default:"Cleaner Portal" }}
+        </span>
+
+        <span>
+            Secure Cleaner Access
+        </span>
+
+        <span>
+            Cleaning Operations
+        </span>
+
+    </footer>
+
+</div>
+
+</body>
+</html>

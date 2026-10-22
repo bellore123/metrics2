@@ -1,0 +1,539 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+CleanStay VIT | Hostel Cleaning Management
+{% endblock %}
+
+{% block body_class %}
+role-selection-body
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/style.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<main class="cs-role-page">
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+    <header class="cs-header">
+
+        <a
+            href="{% url 'role_selection' %}"
+            class="cs-brand"
+        >
+            <div class="cs-brand-logo">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path
+                        d="M8 23L24 10L40 23V39H8V23Z"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linejoin="round"
+                    />
+
+                    <path
+                        d="M19 39V28H29V39"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                    />
+
+                    <path
+                        d="M32 10L34 13L38 15L34 17L32 20L30 17L26 15L30 13Z"
+                        fill="currentColor"
+                    />
+                </svg>
+            </div>
+
+            <div class="cs-brand-copy">
+                <strong>CleanStay VIT</strong>
+                <span>Hostel Cleaning Management</span>
+            </div>
+        </a>
+
+        <div class="cs-service-status">
+            <span></span>
+            VIT Hostel Service
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+    <section class="cs-hero">
+
+        <!-- Actual generated room image -->
+        <img
+            src="{% static 'images/role-hero-room.png' %}"
+            alt=""
+            class="cs-hero-background"
+            aria-hidden="true"
+        >
+
+        <!-- soft overlays so text remains readable -->
+        <div class="cs-hero-overlay"></div>
+        <div class="cs-hero-center-fade"></div>
+
+        <!-- extra small animation -->
+        <div class="cs-floating-effects" aria-hidden="true">
+            <span class="cs-bubble b1"></span>
+            <span class="cs-bubble b2"></span>
+            <span class="cs-bubble b3"></span>
+
+            <span class="cs-star s1">✦</span>
+            <span class="cs-star s2">✦</span>
+            <span class="cs-star s3">✦</span>
+        </div>
+
+        <div class="cs-hero-content">
+
+            <div class="cs-hero-badge">
+                <span>✦</span>
+                Smart hostel cleaning workflow
+            </div>
+
+            <h1>
+                Hostel cleaning,
+                <span>made simple.</span>
+            </h1>
+
+            <p class="cs-hero-description">
+                One platform for students, wardens, cleaners and administrators
+                to manage room cleaning requests efficiently.
+            </p>
+
+            <div class="cs-workflow">
+
+                <div class="cs-workflow-step">
+                    <div class="workflow-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M6 3H15L19 7V21H6V3Z"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+                            <path
+                                d="M9 11H16M9 15H16"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <strong>01</strong>
+                        <span>Request</span>
+                    </div>
+                </div>
+
+                <i></i>
+
+                <div class="cs-workflow-step">
+                    <div class="workflow-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle
+                                cx="9"
+                                cy="8"
+                                r="3"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+                            <path
+                                d="M4 19C4.4 15.8 6.2 14 9 14C11.8 14 13.6 15.8 14 19"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+                            <path
+                                d="M16 9L18 11L21 7"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <strong>02</strong>
+                        <span>Assign</span>
+                    </div>
+                </div>
+
+                <i></i>
+
+                <div class="cs-workflow-step">
+                    <div class="workflow-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M16 3L9 14"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            />
+                            <path
+                                d="M7 14L15 19"
+                                stroke="currentColor"
+                                stroke-width="2.4"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <strong>03</strong>
+                        <span>Clean</span>
+                    </div>
+                </div>
+
+                <i></i>
+
+                <div class="cs-workflow-step">
+                    <div class="workflow-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="9"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+                            <path
+                                d="M8 12L11 15L16 9"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <strong>04</strong>
+                        <span>Confirm</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ROLE ACCESS HEADING
+    ====================================================== -->
+    <section class="cs-access-heading">
+
+        <div>
+            <p>ACCESS YOUR PORTAL</p>
+
+            <h2>
+                Choose how you're using CleanStay
+            </h2>
+        </div>
+
+        <div class="cs-secure-label">
+            <svg viewBox="0 0 24 24">
+                <rect
+                    x="6"
+                    y="10"
+                    width="12"
+                    height="10"
+                    rx="2"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                />
+                <path
+                    d="M9 10V7C9 5.3 10.3 4 12 4C13.7 4 15 5.3 15 7V10"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                />
+            </svg>
+
+            Secure role-based access
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ROLE CARDS
+    ====================================================== -->
+    <section class="cs-role-grid">
+
+
+        <!-- STUDENT -->
+        <a
+            href="{% url 'student_login' %}"
+            class="cs-role-card cs-student-card"
+        >
+
+            <div class="cs-card-illustration">
+                <div class="role-character role-character-student"></div>
+
+                <span class="cs-role-number">
+                    01
+                </span>
+            </div>
+
+            <div class="cs-card-content">
+
+                <span class="cs-role-label">
+                    STUDENT PORTAL
+                </span>
+
+                <h3>Student</h3>
+
+                <p>
+                    Request room cleaning, select your preferred schedule,
+                    track progress and provide feedback.
+                </p>
+
+                <div class="cs-card-tags">
+                    <span>Request cleaning</span>
+                    <span>Track status</span>
+                    <span>Give feedback</span>
+                </div>
+
+                <div class="cs-card-action">
+                    <span>Continue as Student</span>
+                    <strong>→</strong>
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <!-- WARDEN -->
+        <a
+            href="{% url 'warden_login' %}"
+            class="cs-role-card cs-warden-card"
+        >
+
+            <div class="cs-card-illustration">
+                <div class="role-character role-character-warden"></div>
+
+                <span class="cs-role-number">
+                    02
+                </span>
+            </div>
+
+            <div class="cs-card-content">
+
+                <span class="cs-role-label">
+                    WARDEN PORTAL
+                </span>
+
+                <h3>Warden</h3>
+
+                <p>
+                    Review hostel requests, assign available cleaners
+                    and monitor cleaning activity for your block.
+                </p>
+
+                <div class="cs-card-tags">
+                    <span>Review requests</span>
+                    <span>Assign cleaners</span>
+                    <span>Monitor work</span>
+                </div>
+
+                <div class="cs-card-action">
+                    <span>Continue as Warden</span>
+                    <strong>→</strong>
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <!-- CLEANER -->
+        <a
+            href="{% url 'cleaner_login' %}"
+            class="cs-role-card cs-cleaner-card"
+        >
+
+            <div class="cs-card-illustration">
+                <div class="role-character role-character-cleaner"></div>
+
+                <span class="cs-role-number">
+                    03
+                </span>
+
+                <div class="cleaner-mini-sparkles" aria-hidden="true">
+                    <span>✦</span>
+                    <span>✦</span>
+                </div>
+            </div>
+
+            <div class="cs-card-content">
+
+                <span class="cs-role-label">
+                    CLEANER PORTAL
+                </span>
+
+                <h3>Cleaner</h3>
+
+                <p>
+                    View assigned rooms, start cleaning tasks
+                    and update completion status from your dashboard.
+                </p>
+
+                <div class="cs-card-tags">
+                    <span>View jobs</span>
+                    <span>Start cleaning</span>
+                    <span>Complete tasks</span>
+                </div>
+
+                <div class="cs-card-action">
+                    <span>Continue as Cleaner</span>
+                    <strong>→</strong>
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <!-- ADMIN -->
+        <a
+            href="{% url 'admin_login' %}"
+            class="cs-role-card cs-admin-card"
+        >
+
+            <div class="cs-card-illustration">
+                <div class="role-character role-character-admin"></div>
+
+                <span class="cs-role-number">
+                    04
+                </span>
+            </div>
+
+            <div class="cs-card-content">
+
+                <span class="cs-role-label">
+                    ADMIN PORTAL
+                </span>
+
+                <h3>Admin</h3>
+
+                <p>
+                    Manage users, hostel operations, cleaner profiles,
+                    system records and administrative reports.
+                </p>
+
+                <div class="cs-card-tags">
+                    <span>Manage users</span>
+                    <span>System control</span>
+                    <span>Reports</span>
+                </div>
+
+                <div class="cs-card-action">
+                    <span>Continue as Admin</span>
+                    <strong>→</strong>
+                </div>
+
+            </div>
+
+        </a>
+
+    </section>
+
+
+    <!-- =====================================================
+         BENEFITS
+    ====================================================== -->
+    <section class="cs-benefits">
+
+        <article>
+            <div class="cs-benefit-icon">
+                ✓
+            </div>
+
+            <div>
+                <strong>Secure access</strong>
+                <span>Role-based authentication</span>
+            </div>
+        </article>
+
+
+        <article>
+            <div class="cs-benefit-icon">
+                ↻
+            </div>
+
+            <div>
+                <strong>Live tracking</strong>
+                <span>Clear cleaning status</span>
+            </div>
+        </article>
+
+
+        <article class="benefit-orange">
+            <div class="cs-benefit-icon">
+                ⚡
+            </div>
+
+            <div>
+                <strong>Faster workflow</strong>
+                <span>Simple request management</span>
+            </div>
+        </article>
+
+
+        <article>
+            <div class="cs-benefit-icon">
+                ♟
+            </div>
+
+            <div>
+                <strong>Hostel focused</strong>
+                <span>Built for the VIT community</span>
+            </div>
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+    <footer class="cs-footer">
+
+        <span>
+            © 2026 CleanStay VIT
+        </span>
+
+        <div>
+            <span>Secure</span>
+            <i></i>
+            <span>Simple</span>
+            <i></i>
+            <span>Reliable</span>
+        </div>
+
+    </footer>
+
+</main>
+
+{% endblock %}

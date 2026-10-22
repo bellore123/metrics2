@@ -1,0 +1,134 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Administrator Login
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+</head>
+
+<body>
+
+    <main class="individual-login-page admin-login-page">
+
+        <section class="individual-login-card">
+
+            <a
+                href="{% url 'role_selection' %}"
+                class="login-back-link"
+            >
+                ← Back to role selection
+            </a>
+
+            <div class="individual-login-content">
+
+                <div class="individual-login-text">
+
+                    <p class="role-login-eyebrow">
+                        ADMINISTRATION
+                    </p>
+
+                    <h1>
+                        Admin Sign In
+                    </h1>
+
+                    <p>
+                        Sign in using your authorised administrator
+                        email address and password.
+                    </p>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="login-alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% for error in form.non_field_errors %}
+                        <div class="login-alert">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+
+                    <form method="post" class="role-login-form">
+
+                        {% csrf_token %}
+
+                        <div class="role-form-group">
+
+                            <label
+                                for="{{ form.identifier.id_for_label }}"
+                            >
+                                Admin email
+                            </label>
+
+                            {{ form.identifier }}
+
+                            {% for error in form.identifier.errors %}
+                                <small class="login-field-error">
+                                    {{ error }}
+                                </small>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="role-form-group">
+
+                            <label
+                                for="{{ form.password.id_for_label }}"
+                            >
+                                Password
+                            </label>
+
+                            {{ form.password }}
+
+                            {% for error in form.password.errors %}
+                                <small class="login-field-error">
+                                    {{ error }}
+                                </small>
+                            {% endfor %}
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="role-login-submit admin-submit"
+                        >
+                            Sign In as Administrator →
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <div class="individual-login-image">
+
+                    <img
+                        src="{% static 'images/admin-role.png' %}"
+                        alt="Administrator login"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

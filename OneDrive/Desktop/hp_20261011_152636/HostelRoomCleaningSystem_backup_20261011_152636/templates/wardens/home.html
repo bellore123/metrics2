@@ -1,0 +1,36 @@
+{% extends "dashboard_base.html" %}
+{% with home_url="warden_home" role_label="Warden" %}
+{% block title %}Warden Dashboard{% endblock %}
+{% block dashboard_content %}
+<header class="page-heading">
+    <p class="eyebrow">WARDEN CONTROL CENTRE</p>
+    <h1>Hello, {{ request.user.name }} 👋</h1>
+    <p>Manage cleaning requests for {{ warden.assigned_block }}.</p>
+</header>
+<section class="stats-grid stats-three">
+    <article class="stat-card"><span>Pending</span><strong>{{ pending_count }}</strong></article>
+    <article class="stat-card"><span>Active</span><strong>{{ active_count }}</strong></article>
+    <article class="stat-card"><span>Completed</span><strong>{{ completed_count }}</strong></article>
+</section>
+<form class="filter-bar" method="get">
+    <label for="status">Status</label>
+    <select id="status" name="status" onchange="this.form.submit()">
+        <option value="">All requests</option>
+        {% for value, label in statuses %}<option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+</form>
+<section class="panel">
+    <div class="section-heading"><h2>Block requests</h2></div>
+    {% if requests %}
+    <div class="request-list">
+        {% for item in requests %}
+        <a class="request-row" href="{% url 'warden_request_detail' item.id %}">
+            <div><strong>REQ-{{ item.id|stringformat:"04d" }} · {{ item.get_cleaning_type_display }}</strong><span>{{ item.student.user.name }} · Room {{ item.hostel_allocation.room_number }} · {{ item.cleaning_date }}</span></div>
+            <span class="status status-{{ item.status }}">{{ item.get_status_display }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}<div class="empty-state"><h3>No requests found</h3><p>New block requests will appear here.</p></div>{% endif %}
+</section>
+{% endblock %}
+{% endwith %}
