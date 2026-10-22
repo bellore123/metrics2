@@ -1,10 +1,16 @@
 {% comment %}
-Redirect stub — student_dashboard route redirects to student_home.
+Redirect stub - student_dashboard route redirects to student_home.
 This file intentionally left minimal.
 {% endcomment %}
-{% load static %}
 <!DOCTYPE html>
-<html>
-<head><meta http-equiv="refresh" content="0; url={% url 'student_home' %}"></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting…</title>
+  <meta http-equiv="refresh" content="0; url={% url 'student_home' %}">
+</head>
 <body><p>Redirecting to student home…</p></body>
 </html>
+git add templates/dashboards/student_dashboard.html
+git commit -m "Add lang attribute to html tag"
+git push
