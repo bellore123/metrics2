@@ -1,12 +1,15 @@
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from cleaning.models import CleaningRequest
 from cleaners.models import CleanerProfile
-
 from .models import WardenProfile
 
 
@@ -15,16 +18,41 @@ from .models import WardenProfile
 # =========================================================
 
 def is_warden(user):
-    return getattr(user, "role", None) == "warden"
+    return (
+        user.is_authenticated
+        and getattr(user, "role", None) == "warden"
+    )
 
 
 def get_warden_block(user):
     block = getattr(user, "warden_block", None)
+
     if not block:
         profile = getattr(user, "warden_profile", None)
-        if profile and profile.assigned_block:
-            block = profile.assigned_block
+        if profile:
+            block = getattr(profile, "assigned_block", None)
+
     return block
+
+
+def require_warden(request):
+    """Allow access only to authenticated warden accounts."""
+    if not is_warden(request.user):
+        raise PermissionDenied(
+            "You are not allowed to access the warden portal."
+        )
+
+
+def get_block_requests(assigned_block):
+    """Return requests belonging only to the assigned hostel block."""
+    return CleaningRequest.objects.filter(
+        hostel_allocation__block=assigned_block,
+    ).select_related(
+        "student__user",
+        "hostel_allocation",
+        "assigned_cleaner__user",
+        "assigned_by__user",
+    )
 
 
 # =========================================================
@@ -35,7 +63,7 @@ def get_or_create_warden_profile(user):
     assigned_block = get_warden_block(user)
     employee_id = f"WARDEN-{user.pk:04d}"
 
-    profile, created = WardenProfile.objects.get_or_create(
+    profile, _ = WardenProfile.objects.get_or_create(
         user=user,
         defaults={
             "employee_id": employee_id,
@@ -54,26 +82,9 @@ def get_or_create_warden_profile(user):
         fields_to_update.append("employee_id")
 
     if fields_to_update:
-        profile.save(
-            update_fields=fields_to_update,
-        )
+        profile.save(update_fields=fields_to_update)
 
     return profile
-
-
-# =========================================================
-# BLOCK REQUEST QUERY
-# =========================================================
-
-def get_block_requests(assigned_block):
-    return CleaningRequest.objects.filter(
-        hostel_allocation__block=assigned_block,
-    ).select_related(
-        "student__user",
-        "hostel_allocation",
-        "assigned_cleaner__user",
-        "assigned_by__user",
-    )
 
 
 # =========================================================
@@ -82,16 +93,9 @@ def get_block_requests(assigned_block):
 
 @login_required
 def warden_home(request):
-    if not is_warden(request.user):
-        messages.error(
-            request,
-            "You are not allowed to access the warden portal.",
-        )
-        return redirect("dashboard")
+    require_warden(request)
 
-    assigned_block = get_warden_block(
-        request.user,
-    )
+    assigned_block = get_warden_block(request.user)
 
     if not assigned_block:
         messages.error(
@@ -100,28 +104,28 @@ def warden_home(request):
         )
         return redirect("role_selection")
 
-    warden_profile = get_or_create_warden_profile(
-        request.user,
-    )
-
+    warden_profile = get_or_create_warden_profile(request.user)
     today = timezone.localdate()
 
-    block_requests = get_block_requests(
-        assigned_block,
-    )
+    block_requests = get_block_requests(assigned_block)
 
-    # ── Filters ──────────────────────────────────────────────
     selected_status = request.GET.get("status", "").strip()
-    search_query    = request.GET.get("q", "").strip()
+    search_query = request.GET.get("q", "").strip()
+
+    valid_statuses = dict(CleaningRequest.STATUS_CHOICES)
 
     filtered_requests = block_requests
 
     if selected_status:
-        filtered_requests = filtered_requests.filter(
-            status=selected_status,
-        )
+        if selected_status not in valid_statuses:
+            messages.error(request, "Invalid request status filter.")
+            selected_status = ""
+        else:
+            filtered_requests = filtered_requests.filter(
+                status=selected_status,
+            )
+
     if search_query:
-        from django.db.models import Q
         filtered_requests = filtered_requests.filter(
             Q(student__user__name__icontains=search_query)
             | Q(student__user__email__icontains=search_query)
@@ -131,32 +135,19 @@ def warden_home(request):
             | Q(remarks__icontains=search_query)
         )
 
-    recent_requests = filtered_requests.order_by(
-        "-created_at",
-    )[:50]
+    recent_requests = filtered_requests.order_by("-created_at")[:50]
 
-
-    pending_count = block_requests.filter(
-        status="pending",
-    ).count()
-
-    assigned_count = block_requests.filter(
-        status="assigned",
-    ).count()
-
+    pending_count = block_requests.filter(status="pending").count()
+    assigned_count = block_requests.filter(status="assigned").count()
     in_progress_count = block_requests.filter(
-        status="in_progress",
+        status="in_progress"
     ).count()
-
     not_cleaned_count = block_requests.filter(
-        status="not_cleaned",
+        status="not_cleaned"
     ).count()
 
     completed_today_count = block_requests.filter(
-        status__in=[
-            "completed",
-            "confirmed",
-        ],
+        status__in=["completed", "confirmed"],
         updated_at__date=today,
     ).count()
 
@@ -188,12 +179,7 @@ def warden_home(request):
         "available_cleaners_count": available_cleaners_count,
     }
 
-    return render(
-        request,
-        "wardens/dashboard.html",
-        context,
-    )
-
+    return render(request, "wardens/dashboard.html", context)
 
 
 # =========================================================
@@ -202,16 +188,9 @@ def warden_home(request):
 
 @login_required
 def warden_request_detail(request, request_id):
-    if not is_warden(request.user):
-        messages.error(
-            request,
-            "You are not allowed to access the warden portal.",
-        )
-        return redirect("dashboard")
+    require_warden(request)
 
-    assigned_block = get_warden_block(
-        request.user,
-    )
+    assigned_block = get_warden_block(request.user)
 
     if not assigned_block:
         messages.error(
@@ -220,9 +199,7 @@ def warden_request_detail(request, request_id):
         )
         return redirect("warden_home")
 
-    warden_profile = get_or_create_warden_profile(
-        request.user,
-    )
+    warden_profile = get_or_create_warden_profile(request.user)
 
     cleaning_request = get_object_or_404(
         get_block_requests(assigned_block),
@@ -234,11 +211,7 @@ def warden_request_detail(request, request_id):
         is_available=True,
         user__role="cleaner",
         user__is_active=True,
-    ).select_related(
-        "user",
-    ).order_by(
-        "user__name",
-    )
+    ).select_related("user").order_by("user__name")
 
     context = {
         "warden_profile": warden_profile,
@@ -247,11 +220,7 @@ def warden_request_detail(request, request_id):
         "available_cleaners": available_cleaners,
     }
 
-    return render(
-        request,
-        "wardens/request_detail.html",
-        context,
-    )
+    return render(request, "wardens/request_detail.html", context)
 
 
 # =========================================================
@@ -259,24 +228,12 @@ def warden_request_detail(request, request_id):
 # =========================================================
 
 @login_required
+@require_POST
 @transaction.atomic
 def assign_cleaner(request, request_id):
-    if not is_warden(request.user):
-        messages.error(
-            request,
-            "You are not allowed to assign cleaners.",
-        )
-        return redirect("dashboard")
+    require_warden(request)
 
-    if request.method != "POST":
-        return redirect(
-            "warden_request_detail",
-            request_id=request_id,
-        )
-
-    assigned_block = get_warden_block(
-        request.user,
-    )
+    assigned_block = get_warden_block(request.user)
 
     if not assigned_block:
         messages.error(
@@ -285,21 +242,21 @@ def assign_cleaner(request, request_id):
         )
         return redirect("warden_home")
 
-    warden_profile = get_or_create_warden_profile(
-        request.user,
-    )
+    warden_profile = get_or_create_warden_profile(request.user)
 
     cleaning_request = get_object_or_404(
-        get_block_requests(assigned_block),
+        get_block_requests(assigned_block).select_for_update(),
         id=request_id,
     )
 
-    if cleaning_request.status not in {
+    allowed_statuses = {
         "pending",
         "assigned",
         "in_progress",
         "not_cleaned",
-    }:
+    }
+
+    if cleaning_request.status not in allowed_statuses:
         messages.error(
             request,
             "A cleaner cannot be assigned at the current request stage.",
@@ -309,10 +266,7 @@ def assign_cleaner(request, request_id):
             request_id=request_id,
         )
 
-    cleaner_id = request.POST.get(
-        "cleaner_id",
-        "",
-    ).strip()
+    cleaner_id = request.POST.get("cleaner_id", "").strip()
 
     if not cleaner_id:
         messages.error(
@@ -329,17 +283,12 @@ def assign_cleaner(request, request_id):
         assigned_block=assigned_block,
         user__role="cleaner",
         user__is_active=True,
-    ).select_related(
-        "user",
-    ).first()
+    ).select_related("user").first()
 
     if cleaner is None:
         messages.error(
             request,
-            (
-                "The selected cleaner is unavailable "
-                "or belongs to another block."
-            ),
+            "The selected cleaner is invalid or belongs to another block.",
         )
         return redirect(
             "warden_request_detail",
@@ -347,6 +296,7 @@ def assign_cleaner(request, request_id):
         )
 
     old_cleaner = cleaning_request.assigned_cleaner
+
     cleaning_request.assigned_cleaner = cleaner
     cleaning_request.assigned_by = warden_profile
     cleaning_request.status = "assigned"
@@ -361,13 +311,14 @@ def assign_cleaner(request, request_id):
     )
 
     if old_cleaner and old_cleaner != cleaner:
-        has_other = CleaningRequest.objects.filter(
+        has_other_active_request = CleaningRequest.objects.filter(
             assigned_cleaner=old_cleaner,
             status="in_progress",
         ).exclude(
             id=cleaning_request.id,
         ).exists()
-        old_cleaner.is_available = not has_other
+
+        old_cleaner.is_available = not has_other_active_request
         old_cleaner.save(update_fields=["is_available"])
 
     messages.success(
@@ -379,8 +330,16 @@ def assign_cleaner(request, request_id):
         ),
     )
 
-    from notifications.services import notify_roommates_request_status_update
-    notify_roommates_request_status_update(cleaning_request, "assigned")
+    from notifications.services import (
+        notify_roommates_request_status_update,
+    )
+
+    transaction.on_commit(
+        lambda: notify_roommates_request_status_update(
+            cleaning_request,
+            "assigned",
+        )
+    )
 
     return redirect(
         "warden_request_detail",
@@ -388,30 +347,17 @@ def assign_cleaner(request, request_id):
     )
 
 
-
 # =========================================================
 # REJECT REQUEST
 # =========================================================
 
 @login_required
+@require_POST
 @transaction.atomic
 def reject_request(request, request_id):
-    if not is_warden(request.user):
-        messages.error(
-            request,
-            "You are not allowed to reject requests.",
-        )
-        return redirect("dashboard")
+    require_warden(request)
 
-    if request.method != "POST":
-        return redirect(
-            "warden_request_detail",
-            request_id=request_id,
-        )
-
-    assigned_block = get_warden_block(
-        request.user,
-    )
+    assigned_block = get_warden_block(request.user)
 
     if not assigned_block:
         messages.error(
@@ -421,7 +367,7 @@ def reject_request(request, request_id):
         return redirect("warden_home")
 
     cleaning_request = get_object_or_404(
-        get_block_requests(assigned_block),
+        get_block_requests(assigned_block).select_for_update(),
         id=request_id,
     )
 
@@ -446,14 +392,21 @@ def reject_request(request, request_id):
         ],
     )
 
-    from notifications.services import notify_roommates_request_status_update
-    notify_roommates_request_status_update(cleaning_request, "rejected")
+    from notifications.services import (
+        notify_roommates_request_status_update,
+    )
+
+    transaction.on_commit(
+        lambda: notify_roommates_request_status_update(
+            cleaning_request,
+            "rejected",
+        )
+    )
 
     messages.success(
         request,
         "The cleaning request was rejected.",
     )
-
 
     return redirect(
         "warden_request_detail",
@@ -462,28 +415,16 @@ def reject_request(request, request_id):
 
 
 # =========================================================
-# UPDATE REQUEST STATUS DIRECTLY (WARDEN)
+# UPDATE REQUEST STATUS
 # =========================================================
 
 @login_required
+@require_POST
 @transaction.atomic
 def update_request_status(request, request_id):
-    if not is_warden(request.user):
-        messages.error(
-            request,
-            "You are not allowed to update request status.",
-        )
-        return redirect("dashboard")
+    require_warden(request)
 
-    if request.method != "POST":
-        return redirect(
-            "warden_request_detail",
-            request_id=request_id,
-        )
-
-    assigned_block = get_warden_block(
-        request.user,
-    )
+    assigned_block = get_warden_block(request.user)
 
     if not assigned_block:
         messages.error(
@@ -493,7 +434,7 @@ def update_request_status(request, request_id):
         return redirect("warden_home")
 
     cleaning_request = get_object_or_404(
-        get_block_requests(assigned_block),
+        get_block_requests(assigned_block).select_for_update(),
         id=request_id,
     )
 
@@ -501,9 +442,33 @@ def update_request_status(request, request_id):
     valid_statuses = dict(CleaningRequest.STATUS_CHOICES)
 
     if new_status not in valid_statuses:
+        messages.error(request, "Invalid status selected.")
+        return redirect(
+            "warden_request_detail",
+            request_id=request_id,
+        )
+
+    # Avoid accepting a status transition that is not appropriate
+    # for the request's current state.
+    current_status = cleaning_request.status
+
+    allowed_transitions = {
+        "pending": {"assigned", "rejected", "cancelled"},
+        "assigned": {"pending", "in_progress", "not_cleaned", "cancelled"},
+        "in_progress": {"completed", "not_cleaned", "cancelled"},
+        "not_cleaned": {"assigned", "in_progress", "cancelled"},
+        "completed": {"confirmed"},
+        "confirmed": set(),
+        "rejected": set(),
+        "cancelled": set(),
+    }
+
+    if new_status != current_status and new_status not in (
+        allowed_transitions.get(current_status, set())
+    ):
         messages.error(
             request,
-            "Invalid status selected.",
+            "This status transition is not allowed.",
         )
         return redirect(
             "warden_request_detail",
@@ -518,30 +483,42 @@ def update_request_status(request, request_id):
         update_fields.append("completion_date")
 
     if new_status in {"pending", "rejected", "cancelled"}:
-        if cleaning_request.assigned_cleaner:
-            cleaner = cleaning_request.assigned_cleaner
+        cleaner = cleaning_request.assigned_cleaner
+
+        if cleaner:
             cleaning_request.assigned_cleaner = None
             update_fields.append("assigned_cleaner")
 
-            has_other = CleaningRequest.objects.filter(
+            has_other_active_request = CleaningRequest.objects.filter(
                 assigned_cleaner=cleaner,
                 status="in_progress",
             ).exclude(
                 id=cleaning_request.id,
             ).exists()
-            cleaner.is_available = not has_other
+
+            cleaner.is_available = not has_other_active_request
             cleaner.save(update_fields=["is_available"])
 
     cleaning_request.save(update_fields=update_fields)
 
-    from notifications.services import notify_roommates_request_status_update
-    notify_roommates_request_status_update(cleaning_request, new_status)
+    from notifications.services import (
+        notify_roommates_request_status_update,
+    )
+
+    transaction.on_commit(
+        lambda: notify_roommates_request_status_update(
+            cleaning_request,
+            new_status,
+        )
+    )
 
     messages.success(
         request,
-        f"Request status successfully updated to '{valid_statuses[new_status]}'.",
+        (
+            "Request status successfully updated to "
+            f"'{valid_statuses[new_status]}'."
+        ),
     )
-
 
     return redirect(
         "warden_request_detail",

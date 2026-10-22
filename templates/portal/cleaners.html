@@ -8,20 +8,38 @@
 <div class="portal-page">
     <div class="section-header">
         <h2>All Cleaners</h2>
-        <a href="{% url 'portal:portal_add_cleaner' %}" class="btn btn-primary">+ Add Cleaner</a>
+        <a href="{% url 'portal:portal_add_cleaner' %}" class="btn btn-primary">
+            + Add Cleaner
+        </a>
     </div>
 
     <!-- Filters -->
     <form method="get" class="filter-bar">
-        <input type="text" name="q" value="{{ query }}" placeholder="Search name, email or phone…" class="filter-input">
-        <select name="block" class="filter-select">
+        <label for="cleaner-search">Search cleaners</label>
+        <input
+            type="text"
+            id="cleaner-search"
+            name="q"
+            value="{{ query }}"
+            placeholder="Search name, email or phone…"
+            class="filter-input"
+        >
+
+        <label for="cleaner-block-filter">Filter by block</label>
+        <select id="cleaner-block-filter" name="block" class="filter-select">
             <option value="">All Blocks</option>
             {% for val, label in block_choices %}
-            <option value="{{ val }}" {% if block_filter == val %}selected{% endif %}>{{ val }}</option>
+            <option value="{{ val }}" {% if block_filter == val %}selected{% endif %}>
+                {{ val }}
+            </option>
             {% endfor %}
         </select>
+
         <button type="submit" class="btn-filter">Search</button>
-        {% if query or block_filter %}<a href="{% url 'portal:portal_cleaners' %}" class="btn-clear">Clear</a>{% endif %}
+
+        {% if query or block_filter %}
+        <a href="{% url 'portal:portal_cleaners' %}" class="btn-clear">Clear</a>
+        {% endif %}
     </form>
 
     {% if cleaners %}
@@ -43,28 +61,41 @@
                 {% with profile=cleaner.cleaner_profile %}
                 <tr>
                     <td><strong>{{ cleaner.name }}</strong></td>
-                    <td class="email-cell">{{ cleaner.email|default:cleaner.phone|default:"—" }}</td>
+                    <td class="email-cell">
+                        {{ cleaner.email|default:cleaner.phone|default:"—" }}
+                    </td>
                     <td>{{ profile.assigned_block|default:"—" }}</td>
                     <td>{{ profile.employee_id|default:"—" }}</td>
                     <td>
                         {% if profile.is_available %}
-                            <span class="badge badge-active">Yes</span>
+                        <span class="badge badge-active">Yes</span>
                         {% else %}
-                            <span class="badge badge-warning">Busy</span>
+                        <span class="badge badge-warning">Busy</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if cleaner.is_active %}
-                            <span class="badge badge-active">Active</span>
+                        <span class="badge badge-active">Active</span>
                         {% else %}
-                            <span class="badge badge-inactive">Inactive</span>
+                        <span class="badge badge-inactive">Inactive</span>
                         {% endif %}
                     </td>
                     <td class="actions-cell">
-                        <form method="post" action="{% url 'portal:portal_toggle_user' cleaner.pk %}" style="display:inline">
+                        <form
+                            method="post"
+                            action="{% url 'portal:portal_toggle_user' cleaner.pk %}"
+                            style="display:inline"
+                        >
                             {% csrf_token %}
-                            <input type="hidden" name="next" value="portal:portal_cleaners">
-                            <button type="submit" class="btn-sm {% if cleaner.is_active %}btn-sm-danger{% else %}btn-sm-success{% endif %}">
+                            <input
+                                type="hidden"
+                                name="next"
+                                value="portal:portal_cleaners"
+                            >
+                            <button
+                                type="submit"
+                                class="btn-sm {% if cleaner.is_active %}btn-sm-danger{% else %}btn-sm-success{% endif %}"
+                            >
                                 {% if cleaner.is_active %}Deactivate{% else %}Activate{% endif %}
                             </button>
                         </form>
@@ -76,11 +107,7 @@
         </table>
     </div>
     {% else %}
-    <div class="empty-state">
-        <div class="empty-icon">🧹</div>
-        <p>No cleaners found{% if query %} for "{{ query }}"{% endif %}.</p>
-        <a href="{% url 'portal:portal_add_cleaner' %}" class="btn btn-primary">Add First Cleaner</a>
-    </div>
+    <p>No cleaners found.</p>
     {% endif %}
 </div>
 {% endblock %}
