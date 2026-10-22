@@ -1,76 +1,25 @@
-{% extends "portal/base.html" %}
-
-{% block title %}Room Cleaning Requests{% endblock %}
-{% block page_title %}Room Cleaning Requests{% endblock %}
-{% block nav_complaints %}active{% endblock %}
-
-{% block content %}
-<div class="portal-page">
-    <div class="section-header">
-        <h2>All Room Cleaning Requests</h2>
-        <span class="badge-count">{{ complaints.count }} total</span>
-    </div>
-
-    <!-- Filters -->
     <form method="get" class="filter-bar filter-bar-wrap">
-        <input type="text" name="q" value="{{ query }}" placeholder="Search student, reg no, room, description…" class="filter-input">
-        <select name="status" class="filter-select">
+        <label for="complaint-search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Search requests</label>
+        <input type="text" id="complaint-search" name="q" value="{{ query }}" placeholder="Search student, reg no, room, description…" class="filter-input">
+
+        <label for="complaint-status" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Filter by status</label>
+        <select id="complaint-status" name="status" class="filter-select">
             <option value="">All Status</option>
             {% for val, label in status_choices %}
             <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
-        <select name="block" class="filter-select">
+
+        <label for="complaint-block" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Filter by block</label>
+        <select id="complaint-block" name="block" class="filter-select">
             <option value="">All Blocks</option>
             {% for val, label in block_choices %}
             <option value="{{ val }}" {% if block_filter == val %}selected{% endif %}>{{ val }}</option>
             {% endfor %}
         </select>
+
         <button type="submit" class="btn-filter">Filter</button>
         {% if query or status_filter or block_filter %}
         <a href="{% url 'portal:portal_complaints' %}" class="btn-clear">Clear</a>
         {% endif %}
     </form>
-
-    {% if complaints %}
-    <div class="table-wrapper">
-        <table class="portal-table">
-            <thead>
-                <tr>
-                    <th>#ID</th>
-                    <th>Student</th>
-                    <th>Reg No</th>
-                    <th>Block / Room</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Assigned Cleaner</th>
-                    <th>Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for req in complaints %}
-                <tr>
-                    <td class="id-cell">#{{ req.pk }}</td>
-                    <td>{{ req.student.user.name|default:req.student.user.email }}</td>
-                    <td><strong style="color:#4f46e5;">{{ req.student.get_registration_number }}</strong></td>
-                    <td>{{ req.hostel_allocation.block }} – Room {{ req.hostel_allocation.room_number }}</td>
-                    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ req.get_description }}">{{ req.get_description }}</td>
-                    <td><span class="badge badge-{{ req.status }}">{{ req.get_status_display }}</span></td>
-                    <td>{{ req.assigned_cleaner.user.name|default:"—" }}</td>
-                    <td>{{ req.cleaning_date|date:"d M Y" }}</td>
-                    <td><a href="{% url 'portal:portal_complaint_detail' req.pk %}" class="btn-sm">View</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <div class="empty-icon">🧹</div>
-        <p>No cleaning requests found{% if query %} matching "{{ query }}"{% endif %}.</p>
-    </div>
-    {% endif %}
-</div>
-{% endblock %}
-
