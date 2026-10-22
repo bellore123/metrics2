@@ -1,0 +1,1636 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.warden-dashboard-body {
+    margin: 0;
+    background: #f6f8f3;
+    color: #10281a;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+.warden-dashboard-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px 28px 32px;
+    overflow: hidden;
+}
+
+.warden-background-grid,
+.warden-orb {
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+}
+
+.warden-background-grid {
+    inset: 0;
+    opacity: 0.15;
+    background-image:
+        linear-gradient(rgba(22, 139, 73, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22, 139, 73, 0.04) 1px, transparent 1px);
+    background-size: 38px 38px;
+}
+
+.warden-orb {
+    border-radius: 50%;
+    filter: blur(5px);
+}
+
+.warden-orb-one {
+    width: 340px;
+    height: 340px;
+    right: -130px;
+    top: 140px;
+    background: rgba(111, 190, 89, 0.09);
+}
+
+.warden-orb-two {
+    width: 260px;
+    height: 260px;
+    left: -120px;
+    bottom: 100px;
+    background: rgba(22, 139, 73, 0.05);
+}
+
+.warden-navbar,
+.warden-message-list,
+.warden-hero,
+.warden-statistics,
+.warden-content-layout,
+.warden-footer {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.warden-navbar {
+    width: 100%;
+    min-height: 84px;
+    padding: 15px 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce6da;
+    border-radius: 20px;
+
+    box-shadow: 0 8px 28px rgba(20, 61, 33, 0.06);
+}
+
+.warden-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-width: 205px;
+
+    color: inherit;
+    text-decoration: none;
+}
+
+.warden-brand-icon {
+    width: 50px;
+    height: 50px;
+
+    flex: 0 0 50px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 14px;
+
+    background: #148b49;
+    color: white;
+
+    font-size: 21px;
+    font-weight: 900;
+
+    box-shadow: 0 8px 20px rgba(20, 139, 73, 0.17);
+}
+
+.warden-brand > div:last-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.warden-brand strong {
+    color: #10281a;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    line-height: 1.1;
+}
+
+.warden-brand span {
+    margin-top: 4px;
+
+    color: #748078;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.warden-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.warden-navigation a {
+    min-height: 42px;
+    padding: 0 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    color: #637168;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.warden-navigation a:hover {
+    color: #148b49;
+    background: #eff7ed;
+}
+
+.warden-navigation a.active {
+    color: #ffffff;
+    background: #148b49;
+
+    box-shadow: 0 7px 18px rgba(20, 139, 73, 0.18);
+}
+
+.warden-user-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+.warden-user-avatar {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: #148b49;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.warden-user-details {
+    min-width: 95px;
+}
+
+.warden-user-details strong {
+    display: block;
+
+    max-width: 150px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #14291c;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.warden-user-details span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #78847c;
+
+    font-size: 9px;
+}
+
+.warden-logout {
+    min-height: 40px;
+    padding: 0 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #ecc8c8;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #b33840;
+
+    font-size: 10px;
+    font-weight: 900;
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.warden-logout:hover {
+    border-color: #d9676d;
+    background: #fff4f4;
+}
+
+
+/* =========================================================
+   DJANGO MESSAGES
+   ========================================================= */
+
+.warden-message-list {
+    margin-top: 16px;
+}
+
+.warden-message {
+    min-height: 52px;
+    padding: 12px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    border: 1px solid #cfe3cb;
+    border-radius: 13px;
+
+    background: #eff8ed;
+
+    color: #176d3c;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.warden-message + .warden-message {
+    margin-top: 8px;
+}
+
+.warden-message-error {
+    border-color: #f1b8b8;
+    background: #fff1f1;
+    color: #b52c36;
+}
+
+.warden-message-warning {
+    border-color: #edd49b;
+    background: #fff8e8;
+    color: #96620d;
+}
+
+.warden-message-success {
+    border-color: #bde1c4;
+    background: #edf8ef;
+    color: #147b40;
+}
+
+.warden-message button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.warden-hero {
+    min-height: 360px;
+    margin-top: 18px;
+    padding: 42px 48px;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(430px, 0.9fr);
+    align-items: center;
+    gap: 50px;
+
+    overflow: hidden;
+
+    border: 1px solid #d9e5d6;
+    border-radius: 24px;
+
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(114, 194, 91, 0.14),
+            transparent 31%
+        ),
+        linear-gradient(
+            110deg,
+            #ffffff 0%,
+            #fbfdf9 55%,
+            #eff8eb 100%
+        );
+
+    box-shadow: 0 12px 34px rgba(24, 70, 38, 0.05);
+}
+
+.warden-eyebrow {
+    margin: 0 0 14px;
+
+    color: #138b48;
+
+    font-size: 10px;
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+.warden-hero h1 {
+    margin: 0;
+
+    max-width: 650px;
+
+    color: #0c321f;
+
+    font-size: clamp(44px, 5vw, 68px);
+    font-weight: 850;
+
+    line-height: 0.98;
+    letter-spacing: -2.6px;
+}
+
+.warden-hero h1 span {
+    display: block;
+    color: #148b49;
+}
+
+.warden-hero-description {
+    max-width: 720px;
+
+    margin: 22px 0 0;
+
+    color: #647169;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.warden-profile-card {
+    width: fit-content;
+    max-width: 100%;
+
+    margin-top: 26px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.warden-profile-icon {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: #eef7eb;
+
+    color: #148b49;
+
+    font-size: 16px;
+}
+
+.warden-profile-card span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #78837b;
+
+    font-size: 9px;
+}
+
+.warden-profile-card strong {
+    display: block;
+
+    color: #16291c;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.warden-profile-card p {
+    margin: 3px 0 0;
+
+    color: #78837b;
+
+    font-size: 10px;
+}
+
+.warden-hero-actions {
+    display: grid;
+    grid-template-columns: minmax(260px, 1.2fr) minmax(190px, 0.8fr);
+    gap: 14px;
+
+    align-items: stretch;
+}
+
+.warden-primary-action {
+    min-height: 92px;
+    padding: 18px;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    border-radius: 15px;
+
+    background: #148b49;
+    color: white;
+
+    text-decoration: none;
+
+    box-shadow: 0 13px 30px rgba(20, 139, 73, 0.18);
+
+    transition: 0.2s ease;
+}
+
+.warden-primary-action:hover {
+    transform: translateY(-2px);
+    background: #117c40;
+}
+
+.warden-action-icon {
+    width: 43px;
+    height: 43px;
+
+    flex: 0 0 43px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.13);
+
+    font-size: 18px;
+}
+
+.warden-primary-action > div {
+    flex: 1;
+}
+
+.warden-primary-action strong {
+    display: block;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.warden-primary-action p {
+    margin: 4px 0 0;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    line-height: 1.15;
+}
+
+.warden-action-arrow {
+    font-size: 22px;
+}
+
+.warden-date-card {
+    min-height: 92px;
+    padding: 18px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    border: 1px solid #dce5d9;
+    border-radius: 15px;
+
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.warden-date-card span {
+    color: #78847b;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+.warden-date-card strong {
+    margin-top: 5px;
+
+    color: #10281a;
+
+    font-size: 16px;
+}
+
+.warden-date-card p {
+    margin: 4px 0 0;
+
+    color: #758078;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   STATISTICS
+   ========================================================= */
+
+.warden-statistics {
+    margin-top: 18px;
+
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.warden-stat-card {
+    min-height: 110px;
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    border: 1px solid #dce5d9;
+    border-radius: 17px;
+
+    background: #ffffff;
+
+    box-shadow: 0 8px 24px rgba(25, 62, 35, 0.035);
+}
+
+.warden-stat-icon {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 48px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 13px;
+
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.stat-pending {
+    color: #977018;
+    background: #fff4d7;
+}
+
+.stat-assigned {
+    color: #2c7db8;
+    background: #eaf5fd;
+}
+
+.stat-progress {
+    color: #e66c27;
+    background: #fff0e7;
+}
+
+.stat-completed {
+    color: #138b48;
+    background: #eaf7e9;
+}
+
+.warden-stat-card span {
+    display: block;
+
+    color: #78847b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+.warden-stat-card strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #10281a;
+
+    font-size: 28px;
+    font-weight: 850;
+
+    line-height: 1;
+}
+
+.warden-stat-card p {
+    margin: 5px 0 0;
+
+    color: #737f77;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.warden-content-layout {
+    margin-top: 18px;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 16px;
+
+    align-items: start;
+}
+
+.warden-requests-section {
+    min-width: 0;
+    padding: 24px;
+
+    border: 1px solid #dce5d9;
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    box-shadow: 0 8px 28px rgba(25, 62, 35, 0.035);
+}
+
+.warden-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.warden-section-header p {
+    margin: 0 0 6px;
+
+    color: #148b49;
+
+    font-size: 9px;
+    font-weight: 900;
+
+    letter-spacing: 1.6px;
+}
+
+.warden-section-header h2 {
+    margin: 0;
+
+    color: #10281a;
+
+    font-size: 27px;
+    font-weight: 850;
+
+    letter-spacing: -0.7px;
+}
+
+.warden-result-count {
+    color: #7c877f;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   FILTER
+   ========================================================= */
+
+.warden-filter-form {
+    margin-top: 18px;
+    padding: 14px;
+
+    border: 1px solid #dfe7dc;
+    border-radius: 14px;
+
+    background: #fafcf9;
+}
+
+.warden-filter-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.warden-filter-heading > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.warden-filter-icon {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: #eaf6e8;
+    color: #148b49;
+
+    font-size: 17px;
+}
+
+.warden-filter-heading strong {
+    display: block;
+
+    color: #15291c;
+
+    font-size: 10px;
+}
+
+.warden-filter-heading p {
+    margin: 3px 0 0;
+
+    color: #77827a;
+
+    font-size: 9px;
+}
+
+.warden-filter-heading > a {
+    color: #148b49;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    text-decoration: none;
+}
+
+.warden-filter-options {
+    margin-top: 12px;
+
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.warden-filter-chip {
+    cursor: pointer;
+}
+
+.warden-filter-chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.warden-filter-chip span {
+    min-height: 34px;
+    padding: 0 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #dce4d9;
+    border-radius: 999px;
+
+    background: #ffffff;
+    color: #647068;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    transition: 0.18s ease;
+}
+
+.warden-filter-chip:hover span {
+    border-color: #b9d5b8;
+    color: #148b49;
+}
+
+.warden-filter-chip.active span {
+    border-color: #148b49;
+
+    background: #148b49;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   REQUEST CARDS
+   ========================================================= */
+
+.warden-request-list {
+    margin-top: 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.warden-request-card {
+    position: relative;
+
+    min-height: 125px;
+    padding: 16px;
+
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) 28px;
+    gap: 16px;
+
+    align-items: center;
+
+    border: 1px solid #dde6da;
+    border-radius: 15px;
+
+    background: #ffffff;
+
+    color: inherit;
+    text-decoration: none;
+
+    transition: 0.18s ease;
+}
+
+.warden-request-card:hover {
+    border-color: #b9d8b8;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 9px 22px rgba(28, 77, 41, 0.06);
+}
+
+.warden-request-card::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 15px;
+    bottom: 15px;
+
+    width: 3px;
+
+    border-radius: 0 3px 3px 0;
+
+    background: #d9e7d6;
+}
+
+.warden-room-box {
+    width: 70px;
+    min-height: 76px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #edf6e9;
+}
+
+.warden-room-box span {
+    color: #718078;
+
+    font-size: 8px;
+}
+
+.warden-room-box strong {
+    margin-top: 3px;
+
+    color: #148b49;
+
+    font-size: 22px;
+    font-weight: 850;
+}
+
+.warden-room-box small {
+    margin-top: 2px;
+
+    color: #7b877e;
+
+    font-size: 7px;
+}
+
+.warden-request-main {
+    min-width: 0;
+}
+
+.warden-request-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.warden-request-number {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #148b49;
+
+    font-size: 8px;
+    font-weight: 900;
+
+    letter-spacing: 0.6px;
+}
+
+.warden-request-heading h3 {
+    margin: 0;
+
+    color: #10281a;
+
+    font-size: 19px;
+    font-weight: 850;
+}
+
+.warden-status-badge {
+    flex-shrink: 0;
+
+    padding: 7px 10px;
+
+    border-radius: 999px;
+
+    background: #edf2ec;
+    color: #59655d;
+
+    font-size: 7px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background: #fff2cb;
+    color: #9b6c0d;
+}
+
+.status-assigned {
+    background: #e8f3fd;
+    color: #277ab7;
+}
+
+.status-in_progress {
+    background: #fff0e7;
+    color: #d85f20;
+}
+
+.status-completed {
+    background: #e8f6e8;
+    color: #168447;
+}
+
+.status-confirmed {
+    background: #e2f6e7;
+    color: #087c3d;
+}
+
+.status-not_cleaned {
+    background: #ffe7e8;
+    color: #c02d38;
+}
+
+.status-cancelled,
+.status-rejected {
+    background: #f0f1f0;
+    color: #626a65;
+}
+
+.warden-request-information {
+    margin-top: 13px;
+
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1.3fr 1fr;
+    gap: 14px;
+}
+
+.warden-request-information span {
+    display: block;
+
+    color: #879188;
+
+    font-size: 7px;
+}
+
+.warden-request-information strong {
+    display: block;
+
+    margin-top: 3px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: #233328;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.warden-request-remarks {
+    margin-top: 12px;
+    padding: 9px 11px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    border-radius: 9px;
+
+    background: #f7faf6;
+
+    color: #6b786f;
+}
+
+.warden-request-remarks p {
+    margin: 0;
+
+    font-size: 8px;
+}
+
+.warden-request-arrow {
+    color: #148b49;
+
+    font-size: 19px;
+    font-weight: 800;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.warden-empty-state {
+    margin-top: 16px;
+    padding: 50px 20px;
+
+    text-align: center;
+
+    border: 1px dashed #d6e3d3;
+    border-radius: 15px;
+
+    background: #fafcf9;
+}
+
+.warden-empty-icon {
+    width: 48px;
+    height: 48px;
+
+    margin: 0 auto 12px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 13px;
+
+    background: #eaf6e8;
+    color: #148b49;
+}
+
+.warden-empty-state h3 {
+    margin: 0;
+
+    color: #142a1c;
+
+    font-size: 17px;
+}
+
+.warden-empty-state p {
+    margin: 7px auto 0;
+
+    max-width: 450px;
+
+    color: #78837b;
+
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.warden-empty-state a {
+    display: inline-block;
+
+    margin-top: 13px;
+
+    color: #148b49;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   RIGHT SIDE PANEL
+   ========================================================= */
+
+.warden-side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.warden-cleaner-summary,
+.warden-status-guide,
+.warden-report-card,
+.warden-account-card {
+    padding: 20px;
+
+    border: 1px solid #dce5d9;
+    border-radius: 17px;
+
+    background: #ffffff;
+
+    box-shadow: 0 7px 22px rgba(25, 62, 35, 0.03);
+}
+
+.warden-side-icon {
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: #edf6e9;
+    color: #148b49;
+
+    font-size: 17px;
+}
+
+.warden-side-label {
+    margin: 13px 0 5px !important;
+
+    color: #148b49 !important;
+
+    font-size: 8px !important;
+    font-weight: 900;
+
+    letter-spacing: 1.2px;
+}
+
+.warden-cleaner-summary h3,
+.warden-status-guide h3,
+.warden-report-card h3 {
+    margin: 0;
+
+    color: #10281a;
+
+    font-size: 20px;
+    font-weight: 850;
+}
+
+.warden-large-number {
+    display: block;
+
+    margin-top: 15px;
+
+    color: #148b49;
+
+    font-size: 42px;
+    font-weight: 850;
+
+    line-height: 1;
+}
+
+.warden-cleaner-summary > p:not(.warden-side-label) {
+    margin: 9px 0 0;
+
+    color: #69766e;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.warden-warning-box {
+    margin-top: 14px;
+    padding: 11px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+
+    border-radius: 10px;
+
+    background: #fff7e7;
+
+    color: #9b6b11;
+}
+
+.warden-warning-box span {
+    font-weight: 900;
+}
+
+.warden-warning-box p {
+    margin: 0;
+
+    font-size: 8px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   STATUS GUIDE
+   ========================================================= */
+
+.warden-guide-list {
+    margin-top: 14px;
+}
+
+.warden-guide-list > div {
+    padding: 10px 0;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+
+    border-bottom: 1px solid #edf0ec;
+}
+
+.warden-guide-list > div:last-child {
+    border-bottom: 0;
+}
+
+.guide-dot {
+    width: 8px;
+    height: 8px;
+
+    margin-top: 4px;
+
+    flex: 0 0 8px;
+
+    border-radius: 50%;
+}
+
+.pending-dot {
+    background: #e0b633;
+}
+
+.assigned-dot {
+    background: #3891cc;
+}
+
+.progress-dot {
+    background: #e97634;
+}
+
+.completed-dot {
+    background: #269157;
+}
+
+.warden-guide-list strong {
+    display: block;
+
+    color: #25342a;
+
+    font-size: 9px;
+}
+
+.warden-guide-list p {
+    margin: 3px 0 0;
+
+    color: #7a857d;
+
+    font-size: 7px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   REPORT
+   ========================================================= */
+
+.warden-report-row {
+    padding: 11px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    border-bottom: 1px solid #edf0ec;
+}
+
+.warden-report-row:first-of-type {
+    margin-top: 10px;
+}
+
+.warden-report-row:last-child {
+    border-bottom: 0;
+}
+
+.warden-report-row span {
+    color: #6e7a72;
+
+    font-size: 9px;
+}
+
+.warden-report-row strong {
+    color: #10281a;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   ACCOUNT
+   ========================================================= */
+
+.warden-account-card {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.warden-account-avatar {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: #148b49;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.warden-account-card > div:last-child {
+    min-width: 0;
+}
+
+.warden-account-card small {
+    display: block;
+
+    color: #89928b;
+
+    font-size: 7px;
+
+    text-transform: uppercase;
+}
+
+.warden-account-card strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #1b2d20;
+
+    font-size: 10px;
+}
+
+.warden-account-card p {
+    margin: 2px 0 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    color: #7b867e;
+
+    font-size: 7px;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.warden-footer {
+    margin-top: 24px;
+    padding: 16px 4px 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    color: #8a948d;
+
+    font-size: 8px;
+}
+
+.warden-footer > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.warden-footer i {
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #aeb6b0;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1250px) {
+
+    .warden-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-hero-actions {
+        max-width: 650px;
+    }
+
+    .warden-content-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-side-panel {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 1050px) {
+
+    .warden-navbar {
+        flex-wrap: wrap;
+    }
+
+    .warden-navigation {
+        order: 3;
+
+        width: 100%;
+
+        margin: 0;
+
+        justify-content: flex-start;
+
+        overflow-x: auto;
+    }
+
+    .warden-statistics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 760px) {
+
+    .warden-dashboard-page {
+        padding: 12px;
+    }
+
+    .warden-navbar {
+        padding: 12px;
+    }
+
+    .warden-user-details {
+        display: none;
+    }
+
+    .warden-navigation a {
+        padding: 0 11px;
+    }
+
+    .warden-hero {
+        min-height: auto;
+
+        padding: 30px 22px;
+
+        grid-template-columns: 1fr;
+    }
+
+    .warden-hero h1 {
+        font-size: 44px;
+    }
+
+    .warden-hero-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-statistics {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-content-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-requests-section {
+        padding: 17px;
+    }
+
+    .warden-request-card {
+        grid-template-columns: 62px minmax(0, 1fr);
+    }
+
+    .warden-request-arrow {
+        display: none;
+    }
+
+    .warden-request-information {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .warden-request-heading {
+        flex-direction: column;
+    }
+
+    .warden-side-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+@media (max-width: 520px) {
+
+    .warden-brand {
+        min-width: auto;
+    }
+
+    .warden-brand > div:last-child {
+        display: none;
+    }
+
+    .warden-user-avatar {
+        display: none;
+    }
+
+    .warden-hero h1 {
+        font-size: 37px;
+        letter-spacing: -1.7px;
+    }
+
+    .warden-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .warden-request-card {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-room-box {
+        width: 100%;
+        min-height: 60px;
+
+        flex-direction: row;
+        gap: 7px;
+    }
+
+    .warden-request-information {
+        grid-template-columns: 1fr;
+    }
+}

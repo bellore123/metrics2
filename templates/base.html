@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="CleanStay VIT Hostel Room Cleaning Management System"
+    >
+
+    <title>
+        {% block title %}
+            CleanStay VIT
+        {% endblock %}
+    </title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/base.css' %}"
+    >
+
+    {% block extra_css %}
+    {% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+    {% if messages %}
+        <div class="message-container">
+
+            {% for message in messages %}
+                <div
+                    class="system-message
+                    {% if message.tags %}
+                        system-message-{{ message.tags }}
+                    {% endif %}"
+                >
+                    <span>
+                        {{ message }}
+                    </span>
+
+                    <button
+                        type="button"
+                        class="message-close"
+                        onclick="this.parentElement.remove()"
+                    >
+                        ×
+                    </button>
+                </div>
+            {% endfor %}
+
+        </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const messages = document.querySelectorAll(
+                ".system-message"
+            );
+
+            messages.forEach(function (message) {
+                setTimeout(function () {
+                    message.classList.add(
+                        "system-message-hide"
+                    );
+
+                    setTimeout(function () {
+                        message.remove();
+                    }, 400);
+                }, 5000);
+            });
+        });
+    </script>
+
+    {% block extra_js %}
+    {% endblock %}
+
+</body>
+</html>

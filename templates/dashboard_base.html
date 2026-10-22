@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% if request.user.role == "warden" %}
+
+<div class="warden-app">
+
+    <main class="warden-main">
+
+        <header class="warden-topbar">
+
+            <a class="warden-brand" href="{% url 'warden_home' %}">
+
+                <span class="warden-brand-icon">
+                    ✦
+                </span>
+
+                <span class="warden-brand-text">
+                    <strong>CleanStay VIT</strong>
+                    <span>WARDEN PORTAL</span>
+                </span>
+
+            </a>
+
+
+            <nav class="warden-nav">
+
+                <a href="{% url 'warden_home' %}">
+                    Dashboard
+                </a>
+
+                <a href="{% url 'warden_home' %}#requests">
+                    Requests
+                </a>
+
+                <a href="{% url 'warden_home' %}#cleaners">
+                    Cleaners
+                </a>
+
+                <a href="{% url 'warden_home' %}#reports">
+                    Reports
+                </a>
+
+            </nav>
+
+
+            <div class="warden-user-area">
+
+                <div class="warden-avatar">
+                    {{ request.user.name|first|upper }}
+                </div>
+
+                <div class="warden-user-info">
+
+                    <strong>
+                        {{ request.user.name }}
+                    </strong>
+
+                    {% if warden.assigned_block %}
+                        <span>
+                            {{ warden.assigned_block }}
+                        </span>
+                    {% else %}
+                        <span>
+                            Warden
+                        </span>
+                    {% endif %}
+
+                </div>
+
+
+                <a
+                    href="{% url 'logout' %}"
+                    class="warden-logout"
+                >
+                    Logout
+                </a>
+
+            </div>
+
+        </header>
+
+{% elif request.user.role == "cleaner" %}
+
+<div class="cleaner-app">
+
+    <main class="cleaner-main">
+
+        <header class="cleaner-topbar">
+
+            <a
+                href="{% url 'cleaner_home' %}"
+                class="cleaner-sidebar-brand"
+            >
+
+                <span class="cleaner-brand-icon">
+                    ✓
+                </span>
+
+                <span>
+                    <strong>CleanStay VIT</strong>
+                    <span>CLEANER PORTAL</span>
+                </span>
+
+            </a>
+
+
+            <nav class="cleaner-sidebar-nav">
+
+                <a href="{% url 'cleaner_home' %}">
+                    Dashboard
+                </a>
+
+                <a href="{% url 'cleaner_home' %}#assignments">
+                    Assignments
+                </a>
+
+                <a href="{% url 'cleaner_home' %}#profile">
+                    Profile
+                </a>
+
+            </nav>
+
+
+            <div class="cleaner-profile-top">
+
+                <div class="cleaner-profile-avatar">
+                    {{ request.user.name|first|upper }}
+                </div>
+
+                <div class="cleaner-profile-user">
+
+                    <strong>
+                        {{ request.user.name }}
+                    </strong>
+
+                    {% if cleaner.assigned_block %}
+                        <span>
+                            {{ cleaner.assigned_block }}
+                        </span>
+                    {% else %}
+                        <span>
+                            Cleaner
+                        </span>
+                    {% endif %}
+
+                </div>
+
+
+                <a
+                    href="{% url 'logout' %}"
+                    class="cleaner-logout"
+                >
+                    Logout
+                </a>
+
+            </div>
+
+        </header>
+
+{% else %}
+
+<div class="app-shell">
+
+    <main class="main-content">
+
+{% endif %}
+
+
+{% if messages %}
+
+<div class="messages">
+
+    {% for message in messages %}
+
+        <div class="message {{ message.tags }}">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+
+{% block dashboard_content %}
+{% endblock %}
+
+
+{% if request.user.role == "warden" %}
+
+    </main>
+</div>
+
+{% elif request.user.role == "cleaner" %}
+
+    </main>
+</div>
+
+{% else %}
+
+    </main>
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,1166 @@
+/* =========================================================
+   CLEANSTAY VIT
+   WARDEN LOGIN
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body.warden-login-body {
+    background: #f8f8f4;
+    color: #10261b;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.warden-login-page {
+    position: relative;
+
+    min-height: 100vh;
+
+    padding: 25px 6% 45px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 8% 18%,
+            rgba(222, 239, 216, 0.65),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 95% 78%,
+            rgba(227, 241, 222, 0.72),
+            transparent 26%
+        ),
+        #fafaf6;
+}
+
+
+/* BACKGROUND */
+
+.warden-bg-circle {
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+.circle-one {
+    width: 430px;
+    height: 430px;
+
+    right: -190px;
+    top: -170px;
+
+    background:
+        rgba(216, 236, 210, 0.52);
+}
+
+.circle-two {
+    width: 300px;
+    height: 300px;
+
+    left: -160px;
+    bottom: -150px;
+
+    border:
+        1px solid #d9ead5;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.warden-login-header {
+    position: relative;
+    z-index: 20;
+
+    max-width: 1500px;
+
+    margin:
+        0 auto 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+/* BACK */
+
+.warden-back-link {
+    height: 46px;
+
+    padding:
+        0 17px;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 9px;
+
+    border:
+        1px solid #d6e2d4;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,.84);
+
+    color: #31503e;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 750;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .25s ease;
+}
+
+.warden-back-link:hover {
+    background: white;
+
+    color: #087b3e;
+
+    transform:
+        translateX(-3px);
+}
+
+.warden-back-link span {
+    font-size: 17px;
+}
+
+
+/* BRAND */
+
+.warden-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+.warden-brand-icon {
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: #087b3e;
+
+    color: white;
+
+    font-size: 22px;
+
+    box-shadow:
+        0 10px 24px
+        rgba(8,123,62,.16);
+}
+
+.warden-brand strong {
+    display: block;
+
+    font-size: 14px;
+}
+
+.warden-brand span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #7b877f;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.warden-login-layout {
+    position: relative;
+    z-index: 5;
+
+    width: 100%;
+    max-width: 1500px;
+
+    min-height: 760px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(430px, .85fr);
+
+    overflow: hidden;
+
+    border:
+        1px solid #dbe5d9;
+
+    border-radius: 27px;
+
+    background:
+        rgba(255,255,255,.84);
+
+    box-shadow:
+        0 25px 70px
+        rgba(35,65,44,.07);
+}
+
+
+/* =========================================================
+   LEFT PANEL
+========================================================= */
+
+.warden-visual-panel {
+    position: relative;
+
+    min-height: 760px;
+
+    padding:
+        58px 65px 38px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 70% 54%,
+            rgba(216,237,211,.82),
+            transparent 33%
+        ),
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f8fbf5
+        );
+}
+
+.warden-eyebrow {
+    position: relative;
+    z-index: 5;
+
+    margin-bottom: 14px;
+
+    color: #087b3e;
+
+    font-size: 10px;
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+.warden-visual-panel h1 {
+    position: relative;
+    z-index: 5;
+
+    max-width: 660px;
+
+    margin: 0;
+
+    color: #10291d;
+
+    font-size:
+        clamp(
+            48px,
+            4.5vw,
+            73px
+        );
+
+    line-height: .98;
+
+    letter-spacing: -3.5px;
+
+    font-weight: 850;
+}
+
+.warden-visual-panel h1 span {
+    display: block;
+
+    color: #0b8142;
+}
+
+.warden-description {
+    position: relative;
+    z-index: 5;
+
+    max-width: 590px;
+
+    margin:
+        22px 0 0;
+
+    color: #69766e;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   WARDEN CHARACTER
+========================================================= */
+
+.warden-character-area {
+    position: relative;
+
+    height: 385px;
+
+    margin-top: 3px;
+}
+
+.warden-character-circle {
+    position: absolute;
+
+    width: 345px;
+    height: 345px;
+
+    left: 51%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        #e3f1df;
+
+    animation:
+        wardenCircle
+        6s
+        ease-in-out
+        infinite;
+}
+
+
+/*
+    VERIFIED EXISTING IMAGE:
+    static/images/role-characters.png
+
+    Sprite layout:
+    STUDENT | WARDEN
+    CLEANER | ADMIN
+
+    WARDEN = TOP RIGHT
+*/
+
+.warden-character-crop {
+    position: absolute;
+
+    width: 370px;
+    height: 340px;
+
+    left: 51%;
+    bottom: 0;
+
+    transform:
+        translateX(-50%);
+
+    overflow: hidden;
+
+    z-index: 4;
+
+    animation:
+        wardenCharacterFloat
+        4.5s
+        ease-in-out
+        infinite;
+}
+
+.warden-character-image {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-image:
+        url("../images/role-characters.png");
+
+    background-repeat:
+        no-repeat;
+
+    background-size:
+        200% 200%;
+
+    background-position:
+        100% 0%;
+}
+
+
+/* =========================================================
+   FLOATING CARDS
+========================================================= */
+
+.warden-floating-card {
+    position: absolute;
+
+    z-index: 10;
+
+    min-width: 170px;
+
+    padding:
+        11px 13px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    border:
+        1px solid #dbe5d9;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,.95);
+
+    box-shadow:
+        0 12px 30px
+        rgba(34,65,43,.10);
+
+    backdrop-filter:
+        blur(8px);
+}
+
+.floating-card-icon {
+    width: 35px;
+    height: 35px;
+
+    flex: 0 0 35px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: #087f40;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.warden-floating-card strong {
+    display: block;
+
+    color: #173326;
+
+    font-size: 10px;
+}
+
+.warden-floating-card span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #89928c;
+
+    font-size: 8px;
+}
+
+
+/* positions */
+
+.card-requests {
+    left: 1%;
+    top: 62px;
+
+    animation:
+        wardenCardOne
+        4s
+        ease-in-out
+        infinite;
+}
+
+.card-cleaners {
+    right: 1%;
+    bottom: 45px;
+
+    animation:
+        wardenCardTwo
+        4.8s
+        ease-in-out
+        infinite;
+}
+
+.card-progress {
+    right: 3%;
+    top: 35px;
+
+    animation:
+        wardenCardThree
+        5.2s
+        ease-in-out
+        infinite;
+}
+
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.warden-benefits {
+    position: relative;
+    z-index: 10;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-top: 5px;
+}
+
+.warden-benefits > div {
+    min-height: 68px;
+
+    padding: 12px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    border:
+        1px solid #dde7da;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,.88);
+}
+
+.warden-benefits > div > span {
+    width: 31px;
+    height: 31px;
+
+    flex: 0 0 31px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: #e6f3e3;
+
+    color: #087b3e;
+
+    font-weight: 900;
+}
+
+.warden-benefits p {
+    margin: 0;
+}
+
+.warden-benefits strong {
+    display: block;
+
+    font-size: 10px;
+}
+
+.warden-benefits small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #88938b;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   RIGHT LOGIN PANEL
+========================================================= */
+
+.warden-login-panel {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 50px;
+
+    background:
+        radial-gradient(
+            circle at 100% 0,
+            rgba(225,240,220,.78),
+            transparent 35%
+        ),
+        #f6f9f3;
+}
+
+
+/* CARD */
+
+.warden-login-card {
+    width: 100%;
+    max-width: 480px;
+
+    padding:
+        44px 38px 34px;
+
+    border:
+        1px solid #d8e4d6;
+
+    border-radius: 22px;
+
+    background: white;
+
+    box-shadow:
+        0 22px 55px
+        rgba(38,67,46,.08);
+}
+
+
+/* ICON */
+
+.warden-role-icon {
+    width: 62px;
+    height: 62px;
+
+    margin:
+        0 auto 19px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 17px;
+
+    background:
+        #e5f3e2;
+
+    color:
+        #087b3e;
+
+    font-size: 25px;
+
+    font-weight: 900;
+}
+
+
+/* HEADING */
+
+.warden-login-heading {
+    text-align: center;
+}
+
+.warden-login-heading > span {
+    color: #087b3e;
+
+    font-size: 9px;
+    font-weight: 900;
+
+    letter-spacing: 1.8px;
+}
+
+.warden-login-heading h2 {
+    margin:
+        9px 0 8px;
+
+    color: #11281c;
+
+    font-size: 36px;
+
+    letter-spacing: -1.5px;
+}
+
+.warden-login-heading p {
+    max-width: 350px;
+
+    margin: auto;
+
+    color: #7a867e;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   GOOGLE BUTTON
+========================================================= */
+
+.warden-google-button {
+    width: 100%;
+    height: 60px;
+
+    margin-top: 31px;
+
+    padding:
+        0 18px;
+
+    display: flex;
+    align-items: center;
+
+    border:
+        1px solid #d6dfd4;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    color: #182c20;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    box-shadow:
+        0 8px 20px
+        rgba(42,65,47,.05);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.warden-google-button:hover {
+    border-color: #a9c8aa;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 13px 27px
+        rgba(42,65,47,.10);
+}
+
+.google-logo {
+    width: 25px;
+    height: 25px;
+
+    display: grid;
+    place-items: center;
+}
+
+.google-logo svg {
+    width: 22px;
+    height: 22px;
+}
+
+.warden-google-button > span:nth-child(2) {
+    flex: 1;
+
+    text-align: center;
+}
+
+.warden-google-button > strong {
+    color: #087b3e;
+
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   ACCOUNT FORMAT
+========================================================= */
+
+.warden-account-format {
+    margin-top: 16px;
+
+    padding: 15px;
+
+    display: flex;
+
+    gap: 12px;
+
+    border:
+        1px solid #d9e7d7;
+
+    border-radius: 13px;
+
+    background: #f4f9f1;
+}
+
+.warden-format-icon {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: #087f40;
+
+    color: white;
+
+    font-weight: 900;
+}
+
+.warden-account-format span {
+    display: block;
+
+    color: #77847a;
+
+    font-size: 8px;
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+.warden-account-format strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #12693b;
+
+    font-size: 11px;
+
+    word-break: break-word;
+}
+
+.warden-account-format p {
+    margin:
+        5px 0 0;
+
+    color: #7c887f;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   HELP
+========================================================= */
+
+.warden-help-card {
+    margin-top: 15px;
+
+    padding: 15px;
+
+    display: flex;
+
+    gap: 11px;
+
+    border:
+        1px solid #e0e7dc;
+
+    border-radius: 13px;
+
+    background: #fbfcf9;
+}
+
+.warden-help-icon {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: #e8f3e5;
+
+    color: #087b3e;
+
+    font-weight: 900;
+}
+
+.warden-help-card strong {
+    display: block;
+
+    color: #26392e;
+
+    font-size: 10px;
+}
+
+.warden-help-card p {
+    margin:
+        4px 0 0;
+
+    color: #879189;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+.warden-security-row {
+    margin-top: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    color: #859087;
+
+    font-size: 8px;
+}
+
+.warden-security-row i {
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #3b9b62;
+}
+
+
+/* =========================================================
+   DJANGO MESSAGES
+========================================================= */
+
+.warden-message-list {
+    margin-top: 20px;
+}
+
+.warden-message {
+    padding:
+        11px 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border:
+        1px solid #cfe2cf;
+
+    border-radius: 10px;
+
+    background: #eff8ed;
+
+    color: #17643a;
+
+    font-size: 10px;
+}
+
+.warden-message button {
+    border: 0;
+
+    background: transparent;
+
+    color: inherit;
+
+    cursor: pointer;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes wardenCharacterFloat {
+
+    0%,
+    100% {
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+    50% {
+        transform:
+            translateX(-50%)
+            translateY(-9px);
+    }
+}
+
+
+@keyframes wardenCircle {
+
+    0%,
+    100% {
+        transform:
+            translate(-50%, -50%)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translate(-50%, -52%)
+            scale(1.025);
+    }
+}
+
+
+@keyframes wardenCardOne {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+
+@keyframes wardenCardTwo {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(8px);
+    }
+}
+
+
+@keyframes wardenCardThree {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .warden-login-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-visual-panel {
+        min-height: auto;
+    }
+
+    .warden-login-panel {
+        padding:
+            50px 25px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .warden-login-page {
+        padding: 15px;
+    }
+
+    .warden-login-header {
+        align-items: flex-start;
+    }
+
+    .warden-brand span {
+        display: none;
+    }
+
+    .warden-login-layout {
+        border-radius: 20px;
+    }
+
+    .warden-visual-panel {
+        padding:
+            35px 23px;
+    }
+
+    .warden-visual-panel h1 {
+        font-size: 44px;
+
+        letter-spacing: -2px;
+    }
+
+    .warden-character-area {
+        height: 330px;
+    }
+
+    .warden-character-crop {
+        width: 315px;
+        height: 300px;
+    }
+
+    .card-progress {
+        display: none;
+    }
+
+    .warden-benefits {
+        grid-template-columns: 1fr;
+    }
+
+    .warden-login-panel {
+        padding:
+            25px 15px;
+    }
+
+    .warden-login-card {
+        padding:
+            32px 20px;
+    }
+
+    .warden-login-heading h2 {
+        font-size: 30px;
+    }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration:
+            .01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+    }
+}

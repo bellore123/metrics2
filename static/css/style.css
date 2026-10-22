@@ -1,0 +1,1511 @@
+/* =========================================================
+   CLEANSTAY VIT
+   FINAL ROLE SELECTION DESIGN
+========================================================= */
+
+:root {
+    --cs-bg: #f7f6f1;
+    --cs-bg-soft: #fbfaf7;
+
+    --cs-white: #ffffff;
+
+    --cs-text: #14251b;
+    --cs-text-soft: #5f6c64;
+    --cs-text-light: #879188;
+
+    --cs-green: #176839;
+    --cs-green-dark: #10522c;
+    --cs-green-soft: #e9f3e9;
+    --cs-green-pale: #f1f6ee;
+
+    --cs-orange: #e87516;
+    --cs-orange-soft: #fff0e2;
+
+    --cs-border: #dde4dc;
+
+    --cs-shadow:
+        0 16px 42px rgba(34, 64, 43, 0.10);
+
+    --cs-shadow-hover:
+        0 23px 55px rgba(34, 64, 43, 0.15);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.role-selection-body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    color: var(--cs-text);
+
+    background: var(--cs-bg);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+.role-selection-body a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.cs-role-page {
+    min-height: 100vh;
+
+    overflow-x: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fbfaf6 0%,
+            #f8f7f1 55%,
+            #f3f4ec 100%
+        );
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.cs-header {
+    position: relative;
+
+    z-index: 20;
+
+    width: min(1420px, calc(100% - 48px));
+
+    margin: 0 auto;
+
+    padding: 20px 0 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.cs-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.cs-brand-logo {
+    width: 52px;
+    height: 52px;
+
+    flex: 0 0 52px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 14px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #237644,
+            #11542d
+        );
+
+    box-shadow:
+        0 11px 25px rgba(24, 97, 54, 0.19);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.cs-brand:hover .cs-brand-logo {
+    transform:
+        translateY(-2px)
+        rotate(-2deg);
+
+    box-shadow:
+        0 15px 30px rgba(24, 97, 54, 0.24);
+}
+
+.cs-brand-logo svg {
+    width: 31px;
+    height: 31px;
+}
+
+.cs-brand-copy strong {
+    display: block;
+
+    color: #142119;
+
+    font-size: 18px;
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+}
+
+.cs-brand-copy span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--cs-text-soft);
+
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.cs-service-status {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #48564d;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.cs-service-status > span {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #31814d;
+
+    box-shadow:
+        0 0 0 5px
+        rgba(49, 129, 77, 0.08);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.cs-hero {
+    position: relative;
+
+    min-height: 410px;
+
+    overflow: hidden;
+
+    isolation: isolate;
+}
+
+.cs-hero-background {
+    position: absolute;
+
+    z-index: 0;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    transform: scale(1.015);
+
+    animation:
+        heroImageReveal
+        1.1s
+        ease
+        both;
+}
+
+.cs-hero-overlay {
+    position: absolute;
+
+    z-index: 1;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(250, 249, 244, 0.13) 0%,
+            rgba(250, 249, 244, 0.16) 27%,
+            rgba(250, 249, 244, 0.36) 43%,
+            rgba(250, 249, 244, 0.43) 55%,
+            rgba(250, 249, 244, 0.10) 76%,
+            rgba(250, 249, 244, 0.06) 100%
+        );
+}
+
+.cs-hero-center-fade {
+    position: absolute;
+
+    z-index: 2;
+
+    top: 0;
+    left: 50%;
+
+    width: 760px;
+    height: 100%;
+
+    transform: translateX(-50%);
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(251, 250, 246, 0.91) 0%,
+            rgba(251, 250, 246, 0.75) 40%,
+            rgba(251, 250, 246, 0.24) 72%,
+            transparent 100%
+        );
+}
+
+.cs-hero-content {
+    position: relative;
+
+    z-index: 5;
+
+    width: min(720px, calc(100% - 40px));
+
+    margin: 0 auto;
+
+    padding-top: 29px;
+
+    text-align: center;
+
+    animation:
+        heroTextReveal
+        0.7s
+        ease
+        both;
+}
+
+.cs-hero-badge {
+    width: fit-content;
+
+    margin: 0 auto 15px;
+
+    padding: 7px 13px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    border:
+        1px solid
+        #d7e4d7;
+
+    border-radius: 999px;
+
+    color: #386345;
+
+    background:
+        rgba(238, 246, 236, 0.90);
+
+    box-shadow:
+        0 5px 14px
+        rgba(36, 83, 50, 0.05);
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.cs-hero-badge > span {
+    width: 18px;
+    height: 18px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: var(--cs-green);
+
+    font-size: 10px;
+}
+
+.cs-hero h1 {
+    margin: 0;
+
+    color: #0e1f16;
+
+    font-size:
+        clamp(
+            46px,
+            5vw,
+            72px
+        );
+
+    font-weight: 800;
+
+    line-height: 0.98;
+
+    letter-spacing: -4px;
+}
+
+.cs-hero h1 span {
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--cs-green);
+}
+
+.cs-hero-description {
+    max-width: 610px;
+
+    margin:
+        18px
+        auto
+        21px;
+
+    color: #546259;
+
+    font-size: 13px;
+
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   WORKFLOW
+========================================================= */
+
+.cs-workflow {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+}
+
+.cs-workflow > i {
+    width: 26px;
+    height: 1px;
+
+    background:
+        #93af98;
+}
+
+.cs-workflow-step {
+    min-width: 95px;
+
+    padding: 8px 10px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    border:
+        1px solid
+        rgba(217, 225, 215, 0.92);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255, 255, 255, 0.83);
+
+    box-shadow:
+        0 8px 20px
+        rgba(38, 64, 44, 0.05);
+
+    backdrop-filter: blur(5px);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.cs-workflow-step:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 26px
+        rgba(38, 64, 44, 0.09);
+}
+
+.workflow-icon {
+    width: 31px;
+    height: 31px;
+
+    flex: 0 0 31px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    color: var(--cs-green);
+
+    background: #eef5ed;
+}
+
+.workflow-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.cs-workflow-step div:last-child {
+    text-align: left;
+}
+
+.cs-workflow-step strong {
+    display: block;
+
+    color: #17281d;
+
+    font-size: 8px;
+}
+
+.cs-workflow-step span {
+    display: block;
+
+    margin-top: 1px;
+
+    color: #57635b;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   FLOATING HERO EFFECTS
+========================================================= */
+
+.cs-floating-effects {
+    position: absolute;
+
+    z-index: 4;
+
+    inset: 0;
+
+    pointer-events: none;
+}
+
+.cs-bubble {
+    position: absolute;
+
+    border:
+        1.5px solid
+        rgba(104, 175, 167, 0.40);
+
+    border-radius: 50%;
+
+    animation:
+        bubbleRise
+        6s
+        ease-in-out
+        infinite;
+}
+
+.b1 {
+    top: 78px;
+    right: 31%;
+
+    width: 16px;
+    height: 16px;
+}
+
+.b2 {
+    top: 125px;
+    right: 27%;
+
+    width: 25px;
+    height: 25px;
+
+    animation-delay: -2s;
+}
+
+.b3 {
+    top: 190px;
+    right: 32%;
+
+    width: 11px;
+    height: 11px;
+
+    animation-delay: -4s;
+}
+
+.cs-star {
+    position: absolute;
+
+    color:
+        rgba(57, 125, 79, 0.48);
+
+    animation:
+        heroSparkle
+        3s
+        ease-in-out
+        infinite;
+}
+
+.s1 {
+    right: 35%;
+    top: 152px;
+}
+
+.s2 {
+    right: 28%;
+    top: 225px;
+
+    animation-delay: -1s;
+}
+
+.s3 {
+    left: 31%;
+    top: 160px;
+
+    animation-delay: -2s;
+}
+
+
+/* =========================================================
+   ACCESS HEADING
+========================================================= */
+
+.cs-access-heading {
+    width: min(1420px, calc(100% - 48px));
+
+    margin:
+        18px
+        auto
+        14px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.cs-access-heading p {
+    margin:
+        0
+        0
+        5px;
+
+    color: var(--cs-green);
+
+    font-size: 8px;
+    font-weight: 900;
+
+    letter-spacing: 1.5px;
+}
+
+.cs-access-heading h2 {
+    margin: 0;
+
+    color: #17261d;
+
+    font-size: 25px;
+    font-weight: 800;
+
+    letter-spacing: -0.9px;
+}
+
+.cs-secure-label {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    color: #627067;
+
+    font-size: 9px;
+}
+
+.cs-secure-label svg {
+    width: 15px;
+    height: 15px;
+}
+
+
+/* =========================================================
+   ROLE GRID
+========================================================= */
+
+.cs-role-grid {
+    width: min(1420px, calc(100% - 48px));
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 17px;
+}
+
+
+/* =========================================================
+   ROLE CARD
+========================================================= */
+
+.cs-role-card {
+    min-width: 0;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--cs-border);
+
+    border-radius: 18px;
+
+    color: var(--cs-text);
+
+    background:
+        rgba(255, 255, 255, 0.95);
+
+    box-shadow:
+        var(--cs-shadow);
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+
+    animation:
+        cardEntrance
+        0.6s
+        ease
+        both;
+}
+
+.cs-role-card:nth-child(2) {
+    animation-delay: 0.07s;
+}
+
+.cs-role-card:nth-child(3) {
+    animation-delay: 0.14s;
+}
+
+.cs-role-card:nth-child(4) {
+    animation-delay: 0.21s;
+}
+
+.cs-role-card:hover {
+    transform:
+        translateY(-6px);
+
+    border-color:
+        #bccdbc;
+
+    box-shadow:
+        var(--cs-shadow-hover);
+}
+
+
+/* =========================================================
+   CHARACTER CROPPING FROM ONE PNG
+========================================================= */
+
+.cs-card-illustration {
+    position: relative;
+
+    height: 160px;
+
+    margin:
+        13px
+        13px
+        0;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f5f8ef,
+            #eef5ed
+        );
+}
+
+.role-character {
+    position: absolute;
+
+    inset: 0;
+
+    background-image:
+        url("../images/role-characters.png");
+
+    background-repeat: no-repeat;
+
+    background-size:
+        200%
+        200%;
+
+    transition:
+        transform 0.45s ease;
+}
+
+/* top-left */
+.role-character-student {
+    background-position:
+        0%
+        0%;
+}
+
+/* top-right */
+.role-character-warden {
+    background-position:
+        100%
+        0%;
+}
+
+/* bottom-left */
+.role-character-cleaner {
+    background-position:
+        0%
+        100%;
+}
+
+/* bottom-right */
+.role-character-admin {
+    background-position:
+        100%
+        100%;
+}
+
+.cs-role-card:hover
+.role-character {
+    transform:
+        scale(1.035);
+}
+
+.cs-role-number {
+    position: absolute;
+
+    z-index: 3;
+
+    right: 12px;
+    top: 10px;
+
+    color:
+        rgba(62, 79, 67, 0.60);
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   CLEANER CARD EXTRA SPARKLE
+========================================================= */
+
+.cleaner-mini-sparkles {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+}
+
+.cleaner-mini-sparkles span {
+    position: absolute;
+
+    color: #e58b25;
+
+    animation:
+        cleanerSparkle
+        2.4s
+        ease-in-out
+        infinite;
+}
+
+.cleaner-mini-sparkles span:first-child {
+    left: 18px;
+    top: 28px;
+}
+
+.cleaner-mini-sparkles span:last-child {
+    right: 25px;
+    top: 54px;
+
+    animation-delay: -1.1s;
+}
+
+
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
+.cs-card-content {
+    padding:
+        15px
+        17px
+        17px;
+
+    display: flex;
+
+    min-height: 245px;
+
+    flex-direction: column;
+}
+
+.cs-role-label {
+    color: var(--cs-green);
+
+    font-size: 7px;
+    font-weight: 900;
+
+    letter-spacing: 1.2px;
+}
+
+.cs-cleaner-card
+.cs-role-label {
+    color: var(--cs-orange);
+}
+
+.cs-card-content h3 {
+    margin:
+        5px
+        0
+        7px;
+
+    color: #17251c;
+
+    font-size: 24px;
+    font-weight: 800;
+
+    letter-spacing: -0.7px;
+}
+
+.cs-card-content > p {
+    min-height: 54px;
+
+    margin: 0;
+
+    color: #59655e;
+
+    font-size: 10px;
+
+    line-height: 1.55;
+}
+
+.cs-card-tags {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 14px;
+}
+
+.cs-card-tags span {
+    padding:
+        5px
+        7px;
+
+    border-radius:
+        999px;
+
+    color: #566259;
+
+    background: #eef3eb;
+
+    font-size: 6px;
+    font-weight: 700;
+}
+
+.cs-cleaner-card
+.cs-card-tags span {
+    background:
+        #fff3e7;
+}
+
+.cs-card-action {
+    margin-top: auto;
+
+    padding-top: 17px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    color: var(--cs-green);
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.cs-cleaner-card
+.cs-card-action {
+    color: var(--cs-orange);
+}
+
+.cs-card-action strong {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: var(--cs-green);
+
+    font-size: 16px;
+
+    transition:
+        transform 0.24s ease,
+        box-shadow 0.24s ease;
+}
+
+.cs-cleaner-card
+.cs-card-action strong {
+    background:
+        var(--cs-orange);
+}
+
+.cs-role-card:hover
+.cs-card-action strong {
+    transform: translateX(4px);
+
+    box-shadow:
+        0 8px 17px
+        rgba(24, 104, 57, 0.22);
+}
+
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.cs-benefits {
+    width: min(1050px, calc(100% - 48px));
+
+    margin:
+        20px
+        auto
+        0;
+
+    padding:
+        14px
+        19px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            1fr
+        );
+
+    gap: 12px;
+
+    border:
+        1px solid
+        #dde4dc;
+
+    border-radius: 16px;
+
+    background:
+        rgba(255, 255, 255, 0.79);
+
+    box-shadow:
+        0 9px 25px
+        rgba(44, 64, 48, 0.05);
+}
+
+.cs-benefits article {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding:
+        4px
+        9px;
+
+    border-right:
+        1px solid
+        #e9ece7;
+}
+
+.cs-benefits article:last-child {
+    border-right: none;
+}
+
+.cs-benefit-icon {
+    width: 37px;
+    height: 37px;
+
+    flex: 0 0 37px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 11px;
+
+    color: var(--cs-green);
+
+    background: #edf5ec;
+
+    font-size: 14px;
+}
+
+.benefit-orange
+.cs-benefit-icon {
+    color: var(--cs-orange);
+
+    background: var(--cs-orange-soft);
+}
+
+.cs-benefits strong {
+    display: block;
+
+    color: #233028;
+
+    font-size: 9px;
+}
+
+.cs-benefits span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #778179;
+
+    font-size: 7px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.cs-footer {
+    width: min(1420px, calc(100% - 48px));
+
+    margin:
+        13px
+        auto
+        0;
+
+    padding-bottom: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: #7c867f;
+
+    font-size: 8px;
+}
+
+.cs-footer > div {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.cs-footer i {
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+
+    background: #347d4d;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes heroImageReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(1.05);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1.015);
+    }
+}
+
+
+@keyframes heroTextReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+@keyframes cardEntrance {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+@keyframes bubbleRise {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translateY(18px)
+            scale(0.7);
+    }
+
+    35% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translateY(-50px)
+            scale(1.15);
+    }
+}
+
+
+@keyframes heroSparkle {
+
+    0%,
+    100% {
+        opacity: 0.15;
+
+        transform:
+            scale(0.7)
+            rotate(0deg);
+    }
+
+    50% {
+        opacity: 0.8;
+
+        transform:
+            scale(1.15)
+            rotate(25deg);
+    }
+}
+
+
+@keyframes cleanerSparkle {
+
+    0%,
+    100% {
+        opacity: 0.25;
+
+        transform:
+            scale(0.65)
+            rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+
+        transform:
+            scale(1.15)
+            rotate(20deg);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 1120px) {
+
+    .cs-hero {
+        min-height: 390px;
+    }
+
+    .cs-role-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .cs-card-illustration {
+        height: 210px;
+    }
+
+    .cs-benefits {
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+
+    .cs-benefits article:nth-child(2) {
+        border-right: none;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — SMALL TABLET
+========================================================= */
+
+@media (max-width: 760px) {
+
+    .cs-header,
+    .cs-access-heading,
+    .cs-role-grid,
+    .cs-footer {
+        width:
+            calc(
+                100% - 30px
+            );
+    }
+
+    .cs-service-status {
+        display: none;
+    }
+
+    .cs-hero {
+        min-height: 450px;
+    }
+
+    .cs-hero-background {
+        object-position: 60% center;
+
+        opacity: 0.5;
+    }
+
+    .cs-hero-center-fade {
+        width: 100%;
+
+        background:
+            rgba(250, 249, 245, 0.75);
+    }
+
+    .cs-hero-content {
+        padding-top: 50px;
+    }
+
+    .cs-hero h1 {
+        font-size: 47px;
+
+        letter-spacing: -2.5px;
+    }
+
+    .cs-workflow {
+        flex-wrap: wrap;
+    }
+
+    .cs-workflow > i {
+        width: 15px;
+    }
+
+    .cs-access-heading {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .cs-secure-label {
+        display: none;
+    }
+
+    .cs-benefits {
+        width:
+            calc(
+                100% - 30px
+            );
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+
+    .cs-brand-logo {
+        width: 44px;
+        height: 44px;
+
+        flex-basis: 44px;
+    }
+
+    .cs-brand-copy strong {
+        font-size: 15px;
+    }
+
+    .cs-brand-copy span {
+        font-size: 8px;
+    }
+
+    .cs-hero {
+        min-height: 470px;
+    }
+
+    .cs-hero h1 {
+        font-size: 40px;
+
+        letter-spacing: -2px;
+    }
+
+    .cs-hero-description {
+        font-size: 12px;
+    }
+
+    .cs-workflow {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+        max-width: 270px;
+
+        margin:
+            0
+            auto;
+
+        gap: 8px;
+    }
+
+    .cs-workflow > i {
+        display: none;
+    }
+
+    .cs-workflow-step {
+        min-width: 0;
+    }
+
+    .cs-access-heading h2 {
+        font-size: 21px;
+    }
+
+    .cs-role-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cs-card-illustration {
+        height: 220px;
+    }
+
+    .cs-card-content > p {
+        min-height: auto;
+    }
+
+    .cs-benefits {
+        grid-template-columns: 1fr;
+    }
+
+    .cs-benefits article {
+        border-right: none;
+
+        border-bottom:
+            1px solid
+            #e8ece6;
+
+        padding:
+            9px;
+    }
+
+    .cs-benefits article:last-child {
+        border-bottom: none;
+    }
+
+    .cs-footer {
+        flex-direction: column;
+
+        gap: 8px;
+
+        text-align: center;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            0.01ms !important;
+
+        scroll-behavior:
+            auto !important;
+    }
+}

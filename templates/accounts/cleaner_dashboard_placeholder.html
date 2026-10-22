@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cleaner Portal</title>
+</head>
+<body>
+
+    <h1>Cleaner Portal</h1>
+
+    <p>
+        Welcome, {{ request.user.name }}
+    </p>
+
+    <p>
+        Login ID: {{ login_identifier }}
+    </p>
+
+    <p>
+        The complete Cleaner interface will be created later.
+    </p>
+
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
+</body>
+</html>

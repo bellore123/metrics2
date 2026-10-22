@@ -1,0 +1,93 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Student Detail{% endblock %}
+{% block page_title %}Student Detail{% endblock %}
+{% block nav_students %}active{% endblock %}
+
+{% block content %}
+<div class="portal-page">
+    <div class="back-link">
+        <a href="{% url 'portal:portal_students' %}">← Back to Students</a>
+    </div>
+
+    <div class="detail-grid">
+        <!-- Profile Card -->
+        <div class="detail-card">
+            <div class="detail-card-header">Student Profile</div>
+            <div class="detail-body">
+                <div class="detail-avatar">{{ target_user.name|first|upper }}</div>
+                <div class="detail-row"><label>Name</label><span>{{ target_user.name }}</span></div>
+                <div class="detail-row"><label>Email</label><span>{{ target_user.email }}</span></div>
+                <div class="detail-row"><label>Joined</label><span>{{ target_user.date_joined|date:"d M Y" }}</span></div>
+                <div class="detail-row"><label>Status</label>
+                    <span>
+                        {% if target_user.is_active %}
+                            <span class="badge badge-active">Active</span>
+                        {% else %}
+                            <span class="badge badge-inactive">Inactive</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="detail-actions">
+                    <form method="post" action="{% url 'portal:portal_toggle_user' target_user.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="portal:portal_students">
+                        <button type="submit" class="btn {% if target_user.is_active %}btn-danger{% else %}btn-success{% endif %}">
+                            {% if target_user.is_active %}Deactivate Account{% else %}Activate Account{% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hostel Allocations -->
+        <div class="detail-card">
+            <div class="detail-card-header">Hostel Allocations</div>
+            <div class="detail-body">
+                {% if allocations %}
+                {% for alloc in allocations %}
+                <div class="alloc-row {% if alloc.is_current %}alloc-current{% endif %}">
+                    <div class="alloc-block">{{ alloc.block }}</div>
+                    <div class="alloc-info">Room {{ alloc.room_number }} · {{ alloc.academic_year }}</div>
+                    {% if alloc.is_current %}<span class="badge badge-active">Current</span>{% endif %}
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted">No hostel allocation set.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Requests -->
+    <div class="portal-section">
+        <div class="section-header">
+            <h2>Cleaning Requests</h2>
+        </div>
+        {% if requests %}
+        <div class="table-wrapper">
+            <table class="portal-table">
+                <thead>
+                    <tr><th>#</th><th>Block / Room</th><th>Description</th><th>Status</th><th>Date</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    {% for req in requests %}
+                    <tr>
+                        <td>#{{ req.pk }}</td>
+                        <td>{{ req.hostel_allocation.block }} – {{ req.hostel_allocation.room_number }}</td>
+                        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ req.get_description }}">{{ req.get_description }}</td>
+                        <td><span class="badge badge-{{ req.status }}">{{ req.get_status_display }}</span></td>
+                        <td>{{ req.cleaning_date|date:"d M Y" }}</td>
+                        <td><a href="{% url 'portal:portal_complaint_detail' req.pk %}" class="btn-sm">View</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state"><p>No requests yet.</p></div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
