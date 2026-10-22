@@ -1,14 +1,19 @@
+from functools import wraps
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from cleaning.models import CleaningRequest
 from cleaners.models import CleanerProfile
-from students.models import StudentProfile, HostelAllocation
+from students.models import HOSTEL_BLOCK_CHOICES
 from wardens.models import WardenProfile
 
 User = get_user_model()
@@ -20,6 +25,7 @@ User = get_user_model()
 
 def admin_required(view_fn):
     """Decorator: allow only authenticated admins."""
+    @wraps(view_fn)
     @login_required
     def wrapper(request, *args, **kwargs):
         if getattr(request.user, "role", None) != "admin":
@@ -27,7 +33,6 @@ def admin_required(view_fn):
                 "This page is accessible to administrators only."
             )
         return view_fn(request, *args, **kwargs)
-    wrapper.__name__ = view_fn.__name__
     return wrapper
 
 
@@ -40,17 +45,17 @@ def portal_dashboard(request):
     today = timezone.localdate()
 
     total_students = User.objects.filter(role="student").count()
-    total_wardens  = User.objects.filter(role="warden").count()
+    total_wardens = User.objects.filter(role="warden").count()
     total_cleaners = User.objects.filter(role="cleaner").count()
-    total_requests = CleaningRequest.objects.count()
 
-    pending_requests   = CleaningRequest.objects.filter(status="pending").count()
-    assigned_requests  = CleaningRequest.objects.filter(status="assigned").count()
+    total_requests = CleaningRequest.objects.count()
+    pending_requests = CleaningRequest.objects.filter(status="pending").count()
+    assigned_requests = CleaningRequest.objects.filter(status="assigned").count()
     inprogress_requests = CleaningRequest.objects.filter(status="in_progress").count()
     completed_requests = CleaningRequest.objects.filter(
         status__in=["completed", "confirmed"]
     ).count()
-    rejected_requests  = CleaningRequest.objects.filter(status="rejected").count()
+    rejected_requests = CleaningRequest.objects.filter(status="rejected").count()
 
     recent_requests = CleaningRequest.objects.select_related(
         "student__user",
@@ -86,8 +91,8 @@ def portal_dashboard(request):
 
 @admin_required
 def portal_students(request):
-    query  = request.GET.get("q", "").strip()
-    status = request.GET.get("status", "").strip()   # active / inactive
+    query = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "").strip()  # active / inactive
 
     students = User.objects.filter(role="student").select_related(
         "student_profile"
@@ -99,7 +104,6 @@ def portal_students(request):
         students = students.filter(
             Q(name__icontains=query) | Q(email__icontains=query)
         )
-
     if status == "active":
         students = students.filter(is_active=True)
     elif status == "inactive":
@@ -151,7 +155,14 @@ def portal_toggle_user(request, user_id):
     action = "activated" if target.is_active else "deactivated"
     messages.success(request, f"Account for {target.name or target.email} was {action}.")
 
-    next_url = request.POST.get("next", "portal_dashboard")
+    # FIX (pythonsecurity:S5146): only redirect to URLs on our own site.
+    next_url = request.POST.get("next", "")
+    if not url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        next_url = "portal_dashboard"
     return redirect(next_url)
 
 
@@ -183,11 +194,11 @@ def portal_wardens(request):
 def portal_add_warden(request):
     """Create a new warden account directly (admin only)."""
     if request.method == "POST":
-        name     = request.POST.get("name", "").strip()
-        email    = request.POST.get("email", "").strip().lower()
+        name = request.POST.get("name", "").strip()
+        email = request.POST.get("email", "").strip().lower()
         password = request.POST.get("password", "").strip()
-        block    = request.POST.get("assigned_block", "").strip()
-        emp_id   = request.POST.get("employee_id", "").strip()
+        block = request.POST.get("assigned_block", "").strip()
+        emp_id = request.POST.get("employee_id", "").strip()
 
         errors = []
         if not name:
@@ -196,6 +207,11 @@ def portal_add_warden(request):
             errors.append("Email is required.")
         if not password:
             errors.append("Password is required.")
+        else:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                errors.extend(e.messages)
         if not emp_id:
             errors.append("Employee ID is required.")
         if User.objects.filter(email=email).exists():
@@ -221,7 +237,6 @@ def portal_add_warden(request):
             messages.success(request, f"Warden {name} created successfully.")
             return redirect("portal_wardens")
 
-    from students.models import HOSTEL_BLOCK_CHOICES
     return render(request, "portal/add_warden.html", {
         "block_choices": HOSTEL_BLOCK_CHOICES,
     })
@@ -246,11 +261,9 @@ def portal_cleaners(request):
             | Q(email__icontains=query)
             | Q(phone__icontains=query)
         )
-
     if block:
         cleaners = cleaners.filter(cleaner_profile__assigned_block=block)
 
-    from students.models import HOSTEL_BLOCK_CHOICES
     context = {
         "cleaners": cleaners,
         "query": query,
@@ -264,18 +277,23 @@ def portal_cleaners(request):
 def portal_add_cleaner(request):
     """Create a new cleaner account (admin only)."""
     if request.method == "POST":
-        name     = request.POST.get("name", "").strip()
-        phone    = request.POST.get("phone", "").strip()
-        email    = request.POST.get("email", "").strip().lower() or None
+        name = request.POST.get("name", "").strip()
+        phone = request.POST.get("phone", "").strip()
+        email = request.POST.get("email", "").strip().lower() or None
         password = request.POST.get("password", "").strip()
-        block    = request.POST.get("assigned_block", "").strip()
-        emp_id   = request.POST.get("employee_id", "").strip()
+        block = request.POST.get("assigned_block", "").strip()
+        emp_id = request.POST.get("employee_id", "").strip()
 
         errors = []
         if not name:
             errors.append("Name is required.")
         if not password:
             errors.append("Password is required.")
+        else:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                errors.extend(e.messages)
         if not emp_id:
             errors.append("Employee ID is required.")
         if not phone and not email:
@@ -307,7 +325,6 @@ def portal_add_cleaner(request):
             messages.success(request, f"Cleaner {name} created successfully.")
             return redirect("portal_cleaners")
 
-    from students.models import HOSTEL_BLOCK_CHOICES
     return render(request, "portal/add_cleaner.html", {
         "block_choices": HOSTEL_BLOCK_CHOICES,
     })
@@ -319,9 +336,9 @@ def portal_add_cleaner(request):
 
 @admin_required
 def portal_complaints(request):
-    query  = request.GET.get("q", "").strip()
+    query = request.GET.get("q", "").strip()
     status = request.GET.get("status", "").strip()
-    block  = request.GET.get("block", "").strip()
+    block = request.GET.get("block", "").strip()
 
     complaints = CleaningRequest.objects.select_related(
         "student__user",
@@ -339,13 +356,11 @@ def portal_complaints(request):
             | Q(description__icontains=query)
             | Q(remarks__icontains=query)
         )
-
     if status:
         complaints = complaints.filter(status=status)
     if block:
         complaints = complaints.filter(hostel_allocation__block=block)
 
-    from students.models import HOSTEL_BLOCK_CHOICES
     context = {
         "complaints": complaints,
         "query": query,
@@ -355,7 +370,6 @@ def portal_complaints(request):
         "block_choices": HOSTEL_BLOCK_CHOICES,
     }
     return render(request, "portal/complaints.html", context)
-
 
 
 @admin_required
@@ -370,6 +384,7 @@ def portal_complaint_detail(request, request_id):
         pk=request_id,
     )
     feedback = getattr(complaint, "feedback", None)
+
     context = {
         "complaint": complaint,
         "feedback": feedback,
