@@ -494,8 +494,15 @@
 
                     <!-- Search Row -->
                     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+                        <label
+                            for="warden-request-search"
+                            style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"
+                        >
+                            Search requests
+                        </label>
                         <input
                             type="text"
+                            id="warden-request-search"
                             name="q"
                             value="{{ search_query }}"
                             placeholder="Search student name, email or room number…"

@@ -1,23 +1,21 @@
-{% extends "portal/base.html" %}
 
+{% extends "portal/base.html" %}
 {% block title %}Wardens{% endblock %}
 {% block page_title %}Warden Management{% endblock %}
 {% block nav_wardens %}active{% endblock %}
-
 {% block content %}
 <div class="portal-page">
     <div class="section-header">
         <h2>All Wardens</h2>
         <a href="{% url 'portal:portal_add_warden' %}" class="btn btn-primary">+ Add Warden</a>
     </div>
-
     <!-- Search -->
     <form method="get" class="filter-bar">
-        <input type="text" name="q" value="{{ query }}" placeholder="Search name or email…" class="filter-input">
+        <label for="warden-search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Search wardens</label>
+        <input type="text" id="warden-search" name="q" value="{{ query }}" placeholder="Search name or email…" class="filter-input">
         <button type="submit" class="btn-filter">Search</button>
         {% if query %}<a href="{% url 'portal:portal_wardens' %}" class="btn-clear">Clear</a>{% endif %}
     </form>
-
     {% if wardens %}
     <div class="table-wrapper">
         <table class="portal-table">
@@ -65,8 +63,4 @@
     <div class="empty-state">
         <div class="empty-icon">🏛</div>
         <p>No wardens found{% if query %} for "{{ query }}"{% endif %}.</p>
-        <a href="{% url 'portal:portal_add_warden' %}" class="btn btn-primary">Add First Warden</a>
-    </div>
-    {% endif %}
-</div>
-{% endblock %}
+        <a href="{% url
