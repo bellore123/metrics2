@@ -1,25 +1,22 @@
 {% extends "portal/base.html" %}
-
 {% block title %}Student Detail{% endblock %}
 {% block page_title %}Student Detail{% endblock %}
 {% block nav_students %}active{% endblock %}
-
 {% block content %}
 <div class="portal-page">
     <div class="back-link">
         <a href="{% url 'portal:portal_students' %}">← Back to Students</a>
     </div>
-
     <div class="detail-grid">
         <!-- Profile Card -->
         <div class="detail-card">
             <div class="detail-card-header">Student Profile</div>
             <div class="detail-body">
                 <div class="detail-avatar">{{ target_user.name|first|upper }}</div>
-                <div class="detail-row"><label>Name</label><span>{{ target_user.name }}</span></div>
-                <div class="detail-row"><label>Email</label><span>{{ target_user.email }}</span></div>
-                <div class="detail-row"><label>Joined</label><span>{{ target_user.date_joined|date:"d M Y" }}</span></div>
-                <div class="detail-row"><label>Status</label>
+                <div class="detail-row"><span class="detail-label">Name</span><span>{{ target_user.name }}</span></div>
+                <div class="detail-row"><span class="detail-label">Email</span><span>{{ target_user.email }}</span></div>
+                <div class="detail-row"><span class="detail-label">Joined</span><span>{{ target_user.date_joined|date:"d M Y" }}</span></div>
+                <div class="detail-row"><span class="detail-label">Status</span>
                     <span>
                         {% if target_user.is_active %}
                             <span class="badge badge-active">Active</span>
@@ -39,7 +36,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Hostel Allocations -->
         <div class="detail-card">
             <div class="detail-card-header">Hostel Allocations</div>
@@ -58,7 +54,6 @@
             </div>
         </div>
     </div>
-
     <!-- Recent Requests -->
     <div class="portal-section">
         <div class="section-header">
@@ -82,7 +77,6 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-
             </table>
         </div>
         {% else %}
