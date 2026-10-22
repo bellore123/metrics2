@@ -1,66 +1,132 @@
-
+```html
 {% extends "portal/base.html" %}
 {% block title %}Wardens{% endblock %}
 {% block page_title %}Warden Management{% endblock %}
 {% block nav_wardens %}active{% endblock %}
+
 {% block content %}
 <div class="portal-page">
     <div class="section-header">
         <h2>All Wardens</h2>
-        <a href="{% url 'portal:portal_add_warden' %}" class="btn btn-primary">+ Add Warden</a>
+        <a href="{% url 'portal:portal_add_warden' %}" class="btn btn-primary">
+            + Add Warden
+        </a>
     </div>
+
     <!-- Search -->
     <form method="get" class="filter-bar">
-        <label for="warden-search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Search wardens</label>
-        <input type="text" id="warden-search" name="q" value="{{ query }}" placeholder="Search name or email…" class="filter-input">
+        <label
+            for="warden-search"
+            style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"
+        >
+            Search wardens
+        </label>
+
+        <input
+            type="text"
+            id="warden-search"
+            name="q"
+            value="{{ query }}"
+            placeholder="Search name or email…"
+            class="filter-input"
+        >
+
         <button type="submit" class="btn-filter">Search</button>
-        {% if query %}<a href="{% url 'portal:portal_wardens' %}" class="btn-clear">Clear</a>{% endif %}
+
+        {% if query %}
+            <a href="{% url 'portal:portal_wardens' %}" class="btn-clear">
+                Clear
+            </a>
+        {% endif %}
     </form>
+
     {% if wardens %}
-    <div class="table-wrapper">
-        <table class="portal-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Block</th>
-                    <th>Employee ID</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for warden in wardens %}
-                {% with profile=warden.warden_profile %}
-                <tr>
-                    <td><strong>{{ warden.name }}</strong></td>
-                    <td class="email-cell">{{ warden.email }}</td>
-                    <td>{{ profile.assigned_block|default:"—" }}</td>
-                    <td>{{ profile.employee_id|default:"—" }}</td>
-                    <td>
-                        {% if warden.is_active %}
-                            <span class="badge badge-active">Active</span>
-                        {% else %}
-                            <span class="badge badge-inactive">Inactive</span>
-                        {% endif %}
-                    </td>
-                    <td class="actions-cell">
-                        <form method="post" action="{% url 'portal:portal_toggle_user' warden.pk %}" style="display:inline">
-                            {% csrf_token %}
-                            <input type="hidden" name="next" value="portal:portal_wardens">
-                            <button type="submit" class="btn-sm {% if warden.is_active %}btn-sm-danger{% else %}btn-sm-success{% endif %}">
-                                {% if warden.is_active %}Deactivate{% else %}Activate{% endif %}
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                {% endwith %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        <div class="table-wrapper">
+            <table class="portal-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Block</th>
+                        <th scope="col">Employee ID</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for warden in wardens %}
+                        {% with profile=warden.warden_profile %}
+                            <tr>
+                                <td>
+                                    <strong>{{ warden.name }}</strong>
+                                </td>
+
+                                <td class="email-cell">
+                                    {{ warden.email }}
+                                </td>
+
+                                <td>
+                                    {{ profile.assigned_block|default:"—" }}
+                                </td>
+
+                                <td>
+                                    {{ profile.employee_id|default:"—" }}
+                                </td>
+
+                                <td>
+                                    {% if warden.is_active %}
+                                        <span class="badge badge-active">Active</span>
+                                    {% else %}
+                                        <span class="badge badge-inactive">Inactive</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="actions-cell">
+                                    <form
+                                        method="post"
+                                        action="{% url 'portal:portal_toggle_user' warden.pk %}"
+                                        style="display:inline"
+                                    >
+                                        {% csrf_token %}
+
+                                        <input
+                                            type="hidden"
+                                            name="next"
+                                            value="{% url 'portal:portal_wardens' %}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn-sm {% if warden.is_active %}btn-sm-danger{% else %}btn-sm-success{% endif %}"
+                                        >
+                                            {% if warden.is_active %}
+                                                Deactivate
+                                            {% else %}
+                                                Activate
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-    <div class="empty-state">
-        <div class="empty-icon">🏛</div>
-        <p>No wardens found{% if query %} for "{{ query }}"{% endif %}.</p>
-        <a href="{% url
+        <div class="empty-state">
+            <div class="empty-icon" aria-hidden="true">🏛</div>
+
+            <p>
+                No wardens found{% if query %} for "{{ query }}"{% endif %}.
+            </p>
+
+            <a href="{% url 'portal:portal_wardens' %}" class="btn btn-primary">
+                Clear Search
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+```
